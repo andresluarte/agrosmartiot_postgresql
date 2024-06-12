@@ -1,0 +1,84 @@
+{% extends 'agrosmart/base.html' %}
+
+{% block contenido %}
+{% load static %}
+{% load crispy_forms_tags %}
+<br>
+<br>
+<br>
+<script>
+    // Función para mostrar u ocultar el campo de fecha_termino_contrato
+    $(document).ready(function() {
+        $('#trabajador-form select[name="tipo_contraro"]').on('change', function() {
+          var selectedValue = $(this).val();
+          if (selectedValue === 'Plazo fijo') {
+            $('#trabajador-form input[name="fecha_termino_contrato"]').show();
+            $('#trabajador-form label[for="id_fecha_termino_contrato"]').show();
+          } else {
+            $('#trabajador-form input[name="fecha_termino_contrato"]').hide();
+            $('#trabajador-form label[for="id_fecha_termino_contrato"]').hide();
+          }
+        });
+      });
+      
+      
+</script>
+
+
+
+
+
+<div class="row">
+
+    <hr>
+
+    <div class="col-12 col-md-6 offset-md-3">
+
+        <div class="card">
+            <div class="card-body">
+                <h2> Agregar Trabajador </h2>
+                <a href="{% url 'gestiondetrabajadores' %}">
+                    <button class="btn btn-success">Volver Atrás</button>
+                </a>
+                <form id="trabajador-form" action="" class="formularioproceso" method="post" enctype="multipart/form-data">
+
+                    {% csrf_token %}
+
+                    {{form | crispy}}
+                    
+                    
+
+                    <br>
+                    <br>
+
+                    <div>
+                        <input type="reset" value="Cancelar" class="btn btn-danger">
+                        &nbsp;
+                        <button type="submit" id="btnAgregar" class="btn btn-primary">Agregar Trabajador</button>
+                        &nbsp;
+
+
+
+                        {{mensaje}}
+
+                </form>
+                
+                
+            </div>
+            <br>
+            
+            <a href="{% url 'gestiondetrabajadores' %}">
+                <button class="btn btn-success">Volver Atrás</button>
+            </a>
+        </div>
+    </div>
+</div>
+
+
+    
+
+
+
+
+</div>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends 'agrosmart/base.html' %}
+
+{% block contenido %}
+{% load static %}
+{% load crispy_forms_tags %}
+<br>
+<br>
+<br>
+
+
+
+<div class="row">
+
+    <hr>
+
+    <div class="col-12 col-md-6 offset-md-3">
+
+        <div class="card">
+            <div class="card-body">
+                <h2> Modificar Lote </h2>
+                <form action="" class="formularioproceso" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    {{form | crispy}}
+
+                    <br>
+                    <br>
+
+                    <div>
+                        <input type="reset" value="Cancelar" class="btn btn-danger">
+                        &nbsp;
+                        <button type="submit" id="btnAgregar" class="btn btn-primary">Modificar Lote</button>
+                        &nbsp;
+
+
+
+                        {{mensaje}}
+
+                </form>
+
+                
+                
+            </div>
+            <br>
+            
+            <a href="{% url 'gestion_zona' %}">
+                <button class="btn btn-success">Volver Atrás</button>
+                
+            </a>
+            <a href="{% url 'agregarlote' %}">
+                <button class="btn btn-warning">Agregar Lote</button>
+                
+            </a>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+</div>
+{% endblock %}

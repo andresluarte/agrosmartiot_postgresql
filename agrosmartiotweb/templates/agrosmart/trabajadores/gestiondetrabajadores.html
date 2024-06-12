@@ -1,0 +1,212 @@
+{% extends 'agrosmart/base.html' %}
+
+{% block contenido %}
+{% load static %}
+{% load agrosmartiotweb %}
+{% block js %}
+<script>
+  function eliminarTrabajador(id) {
+    Swal.fire({
+      "title": "¿Estas Seguro?",
+      "text": "Esta acción no se puede deshacer",
+      "icon": "question",
+      "showCancelButton": true,
+      "cancelButtonText": "No, Cancelar",
+      "confirmButtonText": "Si, Eliminar",
+      "reverseButtons": true,
+      "confirmButtonColor": "dc3545",
+
+
+
+
+
+
+
+
+
+
+    })
+      .then(function (result) {
+        if (result.isConfirmed) {
+          window.location.href = "/eliminarTrabajador/" + id + "/"
+        }
+      })
+  }
+  
+</script>
+
+{% endblock js %}
+{% load humanize %}
+
+
+<!-- Incluir los estilos de Bootstrap -->
+
+
+
+<div class="tabajadores">
+
+
+  <br>
+  <br>
+
+  <div class="card">
+    <div class="card-body">
+      
+      <h3> Gestión de Trabajadores </h3>
+      <hr>
+      <td>
+        
+      <div class="btn-group justify-content-end">
+        <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+          Opciones
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+
+          <a href="{% url 'agregartrabajador' %}" class="btn btn-secondary">Agregar Trabajador</a>
+
+
+          <a type="button" class="dropdown-item" data-toggle="modal" data-target="#searchModal" href="#">FILTRAR</a>
+
+          <a class="dropdown-item" href="{% url 'exportar_a_excel_trabajador' %}?{{ request.GET.urlencode }}">Exportar a
+            Excel</a>
+
+          
+          <a href="{% url 'gestiondetareas' %}" class="btn btn-secondary">Ir a Tareas</a>
+          <a href="{% url 'gestion_jornadas' %}" class="btn btn-secondary">Ir a Jornadas</a>
+
+          <a class="dropdown-item" href="{% url 'gestiondetrabajadores' %}">Limpiar Filtro</a>
+
+          </ul>
+        </div>
+
+
+
+
+
+
+
+        <div class="modal fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="searchModalLabel">Filtrar Trabajadores</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form method="get">
+                  {{filtered_trabajador.form.as_p}}
+              </div>
+              <br>
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <button type="submit" class="btn btn-success">Filtrar</button>
+                </div>
+
+
+              </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+        
+        <br>
+        &nbsp;
+        
+        
+      
+      
+      
+      </td>
+      <table class="table table-striped table-hover table-responsive">
+        <thead>
+          <tr>
+            <th>NOMBRE </th>
+            <th>COBRO PROMEDIO</th>
+            <th>TRABAJO A REALIZAR</th>
+            <th>RUT</th>
+            <th>Tipo Contrato</th>
+            <th>Fecha Ingreso</th>
+            <th>Fecha Termino </th>
+
+            <th>CANTIDAD Tareas</th>
+            <th>CANTIDAD JORNADAS</th>
+            
+            
+            <th>Opciones</th>
+            
+
+          </tr>
+        </thead>
+        <tbody>
+          {% for t in trabajador_page_obj %}
+          <tr>
+            <td>{{ t.nombre }}</td>
+            <td>${{ t.cobro|floatformat:"-2" }}</td>
+            <td>{{ t.trabajo_a_realizar }}</td>
+            <td>{{ t.rut }}</td>
+            <td>{{ t.tipo_contraro }}</td>
+            <td>{{ t.fecha_ingreso }}</td>
+            <td>
+              {% if t.fecha_termino_contrato %}
+                  {{ t.fecha_termino_contrato }}
+              {% else %}
+                  Sin Fecha Termino
+              {% endif %}
+          </td>
+            
+            
+
+            <td>{{ t.cantidad_tareas }}</td>
+            <td>{{ t.cantidad_jornada }}</td>
+            
+
+            
+            
+            
+           
+            <td>
+              <a href="{% url 'modificartrabajadores' t.id %}" class="btn btn-warning">Modificar</a>
+            </td>
+            <td>
+              <td>
+              <a href="#" onclick="eliminarTrabajador({{ t.id }})" class="btn btn-danger">Eliminar </a>
+              </td>
+            </td>
+            
+            
+            
+
+
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="d-flex justify-content-center" class="pagination ">
+    <span class="step-links">
+      {% if trabajador_page_obj.has_previous %}
+      <a href="{% my_url 1 'page' request.GET.urlencode %}">&laquo; Primera Página</a>
+      <a href="{% my_url trabajador_page_obj.previous_page_number 'page' request.GET.urlencode %}">Anterior</a>
+      {% endif %}
+
+      <span class="current">
+        Página {{ trabajador_page_obj.number }} de {{ trabajador_page_obj.paginator.num_pages }}.
+      </span>
+
+      {% if trabajador_page_obj.has_next %}
+      <a href="{% my_url trabajador_page_obj.next_page_number 'page' request.GET.urlencode %}">Siguiente</a>
+      <a href="{% my_url trabajador_page_obj.paginator.num_pages 'page' request.GET.urlencode %}">Última Página
+      </a>
+      {% endif %}
+    </span>
+  </div>
+
+
+
+</div>
+{% endblock %}

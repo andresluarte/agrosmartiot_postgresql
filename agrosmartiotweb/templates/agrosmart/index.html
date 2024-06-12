@@ -1,0 +1,22 @@
+<!-- agrosmart/templates/agrosmart/index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Temperaturas registradas</title>
+</head>
+<body>
+  <h1>Temperaturas registradas</h1>
+  <table>
+    <tr>
+      <th>Fecha</th>
+      <th>Temperatura (°C)</th>
+    </tr>
+    {% for temperatura in temperaturas %}
+    <tr>
+      <td>{{ temperatura.fecha }}</td>
+      <td>{{ temperatura.valor }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</body>
+</html>

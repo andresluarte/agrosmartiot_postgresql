@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Agregar Ubicación</title>
+</head>
+<body>
+    <h1>Agregar Ubicación</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+       
+        <button type="submit">Guardar</button>
+    </form>
+    <form method="post">
+        {% csrf_token %}
+        {{ form1.as_p }}
+       
+        
+    </form>
+</body>
+</html>

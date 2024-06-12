@@ -1,0 +1,227 @@
+{% extends 'agrosmart/base.html' %}
+
+{% block contenido %}
+{% load static %}
+{% load agrosmartiotweb %}
+{% block js %}
+<script>
+  function eliminarProceso(id) {
+    Swal.fire({
+      "title": "¿Estas Seguro?",
+      "text": "Esta acción no se puede deshacer",
+      "icon": "question",
+      "showCancelButton": true,
+      "cancelButtonText": "No, Cancelar",
+      "confirmButtonText": "Si, Eliminar",
+      "reverseButtons": true,
+      "confirmButtonColor": "dc3545",
+
+
+
+
+
+
+
+
+
+
+    })
+      .then(function (result) {
+        if (result.isConfirmed) {
+          window.location.href = "/eliminartarea/" + id + "/"
+        }
+      })
+  }
+
+</script>
+<script>
+  function limpiarFiltrosYRecargar() {
+    // Obtener el formulario
+    const form = document.getElementById('searchForm');
+
+    // Restablecer los valores de todos los campos del formulario a sus valores predeterminados
+    form.reset();
+
+    // Recargar la página sin aplicar ningún tipo de filtro
+    window.location.href = "{% url 'gestiondetareas' %}";
+  }
+</script>
+{% endblock js %}
+{% load humanize %}
+
+
+<!-- Incluir los estilos de Bootstrap -->
+
+
+
+<div class="tareas">
+  <br>
+  <br>
+  <div class="card">
+    <div class="card-body">
+      <h3> Gestión de Tareas </h3>
+      <hr>
+      <td>
+        <div class="btn-group justify-content-end">
+          <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            Opciones
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+
+            <a class="dropdown-item"href="{% url 'agregartarea' %}" >Agregar Tarea</a>
+            <a class="dropdown-item" href="{% url 'gestiondetrabajadores' %}">Trabajadores</a>
+            <a type="button" class="dropdown-item" data-toggle="modal" data-target="#searchModal" href="#">FILTRAR</a>
+            <a class="dropdown-item" href="{% url 'exportar_a_excel_proceso' %}?{{ request.GET.urlencode }}">Exportar a
+              Excel</a>
+            <a class="dropdown-item" href="{% url 'gestiondetareas' %}">Limpiar Filtro</a>
+            </ul>
+          </div>
+
+
+          <br>
+          &nbsp;
+
+      
+          <div class="modal fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="searchModalLabel">Filtrar Jornadas</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form method="get">
+                    {{filtered_proceso.form.as_p}}
+                </div>
+                <br>
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <button type="submit" class="btn btn-success">Filtrar</button>
+                  </div>
+
+
+                </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+        <br>
+        &nbsp;
+
+
+
+      </td>
+      <div>
+
+      
+        <table class="table table-striped table-hover table-responsive" style="overflow-x: auto;">
+          <thead>
+            <tr>
+              <th>TRABAJO</th>
+              <th>FECHA</th>
+              <th>HORA ASIGNADA</th>
+              <th>SECTOR</th>
+              <th>HUERTO</th>
+              <th>LOTE</th>
+              
+              <th>ESTADO</th>
+              <th>ASIGNADO</th>
+
+
+              <th>PRESUPUESTO</th>
+              <th>OBSERVACIÓN</th>
+
+
+
+              <th>Opciones</th>
+
+
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in proceso_page_obj %}
+            <tr>
+              <td>{{ p.trabajo }}</td>
+              <td>{{ p.fecha }}</td>
+              <td>{{ p.hora_asignada }}</td>
+              <td>
+                {% if p.sector %}
+                {{ p.sector}}
+                {% else %}
+                Sin Sector Asignado
+                {% endif %}
+              </td>
+              <td>
+                {% if p.huerto %}
+                {{ p.huerto}}
+                {% else %}
+                Sin Huerto Asignado
+                {% endif %}
+
+              </td>
+
+              <td>
+                {% if p.lote%}
+                {{ p.lote}}
+                {% else %}
+                Sin Lote Asignado
+                {% endif %}
+              </td>
+              <td>{{ p.estado }}</td>
+              <td>{{ p.asignado }}</td>
+              <td>${{ p.presupuesto|floatformat:"-2" }}</td>
+              <td>{{ p.observacion }}</td>
+
+
+
+
+
+
+              <td>
+                <a href="{% url 'modificartarea' p.id %}" class="btn btn-warning">Modificar</a>
+              </td>
+              <td>
+                <a href="#" onclick="eliminarProceso({{ p.id }})" class="btn btn-danger">Eliminar </a>
+              </td>
+
+
+
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <br>
+
+  <div class="d-flex justify-content-center" class="pagination ">
+    <span class="step-links">
+      {% if proceso_page_obj.has_previous %}
+      <a href="{% my_url 1 'page' request.GET.urlencode %}">&laquo; Primera Página</a>
+      <a href="{% my_url proceso_page_obj.previous_page_number 'page' request.GET.urlencode %}">Anterior</a>
+      {% endif %}
+
+      <span class="current">
+        Página {{ proceso_page_obj.number }} de {{ proceso_page_obj.paginator.num_pages }}.
+      </span>
+
+      {% if proceso_page_obj.has_next %}
+      <a href="{% my_url proceso_page_obj.next_page_number 'page' request.GET.urlencode %}">Siguiente</a>
+      <a href="{% my_url proceso_page_obj.paginator.num_pages 'page' request.GET.urlencode %}">Última Página
+      </a>
+      {% endif %}
+    </span>
+  </div>
+
+
+
+
+
+</div>
+{% endblock %}

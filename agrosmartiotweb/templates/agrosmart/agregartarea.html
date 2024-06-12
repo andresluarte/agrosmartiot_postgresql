@@ -1,0 +1,118 @@
+{% extends 'agrosmart/base.html' %}
+
+{% block contenido %}
+{% load static %}
+{% load crispy_forms_tags %}
+<br>
+<br>
+<br>
+
+
+
+<div class="row">
+
+    <hr>
+
+    <div class="col-12 col-md-6 offset-md-3">
+
+        <div class="card">
+            <div class="card-body">
+                <h2> Agregar Tarea </h2>
+                <a href="{% url 'gestiondetareas' %}">
+                    <button class="btn btn-success">Volver Atrás</button>
+                </a>
+                <form action="" class="formularioproceso" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    {{form | crispy}}
+
+                    <br>
+                    <br>
+
+                    <div>
+                        <input type="reset" value="Cancelar" class="btn btn-danger">
+                        &nbsp;
+                        <button type="submit" id="btnAgregar" class="btn btn-primary">Agregar Tarea</button>
+                        &nbsp;
+
+
+
+                        {{mensaje}}
+
+                </form>
+                
+                
+            </div>
+            <br>
+            
+            <a href="{% url 'gestiondetareas' %}">
+                <button class="btn btn-success">Volver Atrás</button>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        // Manejar el evento de cambio en el campo de sector
+        $("#id_sector").change(function () {
+            var selectedSector = $(this).val();
+            // Limpiar los valores de los combos de huerto y lote
+            $("#id_huerto").empty();
+            $("#id_lote").empty();
+            $.ajax({
+                url: "/cargar_huertos/",
+                data: {
+                    'sector_id': selectedSector
+                },
+                dataType: 'json',
+                success: function (data) {
+                    var $huertoSelect = $("#id_huerto");
+                    $.each(data.huertos, function (index, huerto) {
+                        $huertoSelect.append($('<option>', {
+                            value: huerto.id,
+                            text: huerto.nombre
+                        }));
+                    });
+
+                    // Disparar el evento "change" en el campo de huerto después de cargar las opciones
+                    $huertoSelect.trigger('change');
+                },
+                error: function () {
+                    console.error("Error al cargar los huertos.");
+                }
+            });
+        });
+
+        // Manejar el evento de cambio en el campo de huerto    
+        $("#id_huerto").change(function () {
+            var selectedHuerto = $(this).val();
+            // Limpiar el valor del combo de lote
+            $("#id_lote").empty();
+            $.ajax({
+                url: "/cargar_lotes/",
+                data: {
+                    'huerto_id': selectedHuerto
+                },
+                dataType: 'json',
+                success: function (data) {
+                    var $loteSelect = $("#id_lote");
+                    $.each(data.lotes, function (index, lote) {
+                        $loteSelect.append($('<option>', {
+                            value: lote.id,
+                            text: lote.nombre
+                        }));
+                    });
+                },
+                error: function () {
+                    console.error("Error al cargar los lotes.");
+                }
+            });
+        });
+    });
+</script>
+
+
+
+</div>
+{% endblock %}
