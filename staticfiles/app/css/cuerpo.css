@@ -1,0 +1,58 @@
+
+
+.texto-oscuro {
+    color: rgb(31, 30, 30);
+}
+
+.opaco {
+    background-color: black;
+}
+
+.claro {
+    background-color: rgba(255, 255, 255, 0.678);
+}
+
+#rcorners2 {
+    border-radius: 25px;
+    border: 2px solid #73AD21;
+    padding: 20px;
+    width: 200px;
+    height: 150px;
+    background-image: url("fondo.jpg");
+}
+
+#carrito {
+    background-image: url("carro-de-la-compra.png");
+    position: fixed;
+    top: 20px;
+    right: 16px;
+    background-color: coral;
+}
+
+.right {
+    float: right;
+    text-align: center;
+    margin: 0px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.padding {
+    margin: 0px;
+}
+
+.topright {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    font-size: 20px;
+    background-color: rgba(172, 255, 47, 0.74);
+}
+
+.total {
+    position: fixed;
+    top: 70px;
+    right: 0px;
+    font-size: 20px;
+    background-color: rgba(172, 255, 47, 0.74);
+}

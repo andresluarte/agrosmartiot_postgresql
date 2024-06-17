@@ -1,1 +1,2 @@
-web: gunicorn agrosmartiot.wsgi:application --log-file -
+
+web: gunicorn agrosmartiot.wsgi

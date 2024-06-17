@@ -84,22 +84,26 @@ WSGI_APPLICATION = 'agrosmartiot.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 import dj_database_url
 from decouple import config
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'agrosmartiot', #nombre de la base de datos
-#         'USER':'postgres', #nombre dl usuario (cuando se instala postgres)
-#         'PASSWORD':'password', #password cuando se crea postgree
-#         'HOST':'localhost', #localhost es el nombre del host cuando se instala
-#         'DATABASE_PORT':'5432', # database port == 5432
-#     }
-# }
 DATABASES = {
-    'default': dj_database_url.config(
-        default=config('DATABASE_URL')
-    )
-}
+    'default': 
+        {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+         'NAME': 'd19jiqb2kb2vn0', #nombre de la base de datos
+         'USER':'uf38ta0aviljmb', #nombre dl usuario (cuando se instala postgres)
+         'PASSWORD':'p8e487a3c05d4f6dd6a3c6132070f340eb958877c69baff6727d7367f88717888', #password cuando se crea postgree
+         'HOST':'c5flugvup2318r.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com', #localhost es el nombre del host cuando se instala
+         'DATABASE_PORT':'5432', # database port == 5432
+        }
+} 
+# DATABASES = {
+#      'default': dj_database_url.config(
+#          default=config('DATABASE_URL')
+#      )
+#  }
 
+import dj_database_url
+db_from_env = dj_database_url.config(conn_max_age=600)
+DATABASES['default'].update(db_from_env)
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -157,4 +161,10 @@ STATICFILES_STORAGE='whitenoise.storage.CompressedManifestStaticFilesStorage'
 #kafka
 KAFKA_SERVER = 'localhost:9092'
 KAFKA_TOPIC = 'temperatura-topic'
+
+#New start
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+#New End
 django_heroku.settings(locals())
