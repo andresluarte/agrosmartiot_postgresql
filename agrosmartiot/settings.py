@@ -13,10 +13,10 @@ import os
 from pathlib import Path
 import django_heroku
 import dj_database_url
+from decouple import config
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-import pytz
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -27,12 +27,13 @@ SECRET_KEY = 'django-insecure-i+h^ifkudr)+q*__he#@n=#=q*rk17-b!3^ns4vmt+5og7sqz1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['agrosmartiot  .herokuapp.com']
+ALLOWED_HOSTS = ['agrosmartiot.herokuapp.com']
 
 MESSAGE_STORAGE = "django.contrib.messages.storage.cookie.CookieStorage"
 
-LOGIN_REDIRECT_URL ='/'
+LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -42,10 +43,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'agrosmartiotweb','agrosmartiot',
-    'django.contrib.humanize','crispy_forms',"django_filters","rest_framework","import_export","mptt"
-    
+    'agrosmartiotweb',
+    'agrosmartiot',
+    'django.contrib.humanize',
+    'crispy_forms',
+    "django_filters",
+    "rest_framework",
+    "import_export",
+    "mptt",
 ]
+
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
@@ -56,7 +63,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware'
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'agrosmartiot.urls'
@@ -64,7 +71,7 @@ ROOT_URLCONF = 'agrosmartiot.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['./templates/agrosmart'],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -79,37 +86,25 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'agrosmartiot.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-import dj_database_url
-from decouple import config
 DATABASES = {
-    'default': 
-        {
+    'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-         'HOST':'localhost',
-         'PORT':'5432',
-         'NAME':'agrosmartiot',
-         'USER':'postgres',
-         'PASSWORD':'password',
+        'NAME': 'd4cjvqld10rq2r',
+        'USER': 'u8i7lei9u5044r',
+        'PASSWORD': 'p8acfe5d21f42da26a906cd3eee7ef36974acf6e7dde3aa8bf024c7a110a3c472',
+        'HOST': 'c3gtj1dt5vh48j.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com',
+        'PORT': '5432',
+    }
+}
 
-
-        }
-} 
-# DATABASES = {
-#      'default': dj_database_url.config(
-#          default=config('DATABASE_URL')
-#      )
-#  }
-
-import dj_database_url
-db_from_env = dj_database_url.config(conn_max_age=600)
+# Update database configuration with $DATABASE_URL.
+db_from_env = dj_database_url.config(conn_max_age=600, ssl_require=True)
 DATABASES['default'].update(db_from_env)
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -125,10 +120,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
-
 LANGUAGE_CODE = 'es'
 
 TIME_ZONE = 'America/Santiago'
@@ -137,37 +130,23 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
+STATIC_URL = '/static/'
 
-STATIC_URL = 'static/'
+# Define the location where static files will be collected
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
+# Configure Django to find your static files in the staticfiles directory
+#STATICFILES_DIRS = [
+#    os.path.join(BASE_DIR, 'staticfiles'),
+#]
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-
-STATIC_URL='/static/'
-
-STATIC_ROOT=os.path.join(BASE_DIR,'staticfiles')
-#STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = (os.path.join(BASE_DIR,'static'),)
-
-import os
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-
-STATICFILES_STORAGE='whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-#kafka
-
-#New start
-db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(db_from_env)
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-#New End
+
+# Media files
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Activate Django-Heroku.
 django_heroku.settings(locals())

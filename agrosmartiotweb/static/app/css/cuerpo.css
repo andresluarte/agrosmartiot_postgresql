@@ -18,11 +18,11 @@
     padding: 20px;
     width: 200px;
     height: 150px;
-    background-image: url("fondo.jpg");
+    
 }
 
 #carrito {
-    background-image: url("carro-de-la-compra.png");
+    
     position: fixed;
     top: 20px;
     right: 16px;
