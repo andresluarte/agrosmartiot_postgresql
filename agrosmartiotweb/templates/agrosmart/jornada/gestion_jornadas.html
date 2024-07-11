@@ -50,6 +50,7 @@
           <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
             <a class="dropdown-item" href="{% url 'agregar_jornada' %}">Agregar Jornada</a>
             <a class="dropdown-item" href="{% url 'gestiondetrabajadores' %}">Trabajadores</a>
+            <a class="dropdown-item" href="{% url 'gestion_finanzas' %}">Finanzas</a>
             <a type="button" class="dropdown-item" data-toggle="modal" data-target="#searchModal" href="#">FILTRAR</a>
             <a class="dropdown-item" href="{% url 'exportar_a_excel_jornada' %}?{{ request.GET.urlencode }}">Exportar a
               Excel</a>
@@ -151,7 +152,7 @@
                 {% if jornada.huerto %}
                 {{ jornada.huerto}}
                 {% else %}
-                Sin Huerto Asignado
+                Todos los Huertos del Sector
                 {% endif %}
 
               </td>
@@ -160,7 +161,7 @@
                 {% if jornada.lote%}
                 {{ jornada.lote}}
                 {% else %}
-                Sin Lote Asignado
+                Todos los lotes del huerto
                 {% endif %}
               </td>
               <td>{{ jornada.fecha }}</td>

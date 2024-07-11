@@ -1,5 +1,5 @@
 from django import forms 
-from .models import Procesos,Contacto,Trabajador,Sector,Huerto,Lote
+from .models import Procesos,Contacto,Trabajador,Sector,Huerto,Lote,GastoFinanciero
 
 class DateInput(forms.DateInput):
     input_type='date'
@@ -159,7 +159,9 @@ class JornadaForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         for field_name in ['cobro_tarea_1', 'cobro_tarea_2', 'cobro_tarea_3']:
             self.fields[field_name].widget.attrs['readonly'] = False
-        
+
+
+    
 
 class JornadaModificarForm(forms.ModelForm):
     
@@ -263,8 +265,13 @@ class LoginForm(AuthenticationForm):
     password = forms.CharField(widget=PasswordInput())
 
     
-    
-
+class GastoFinancieroForm(forms.ModelForm):
+    class Meta:
+        model = GastoFinanciero
+        fields = ['nombre_gasto', 'monto', 'fecha_correspondiente', 'observacion']
+        widgets = {
+            'fecha_correspondiente': forms.DateInput(attrs={'type': 'date'}),
+        }
 
 
 

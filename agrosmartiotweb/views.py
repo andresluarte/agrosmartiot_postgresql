@@ -1,7 +1,7 @@
 from typing import Any, Dict
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Procesos ,Trabajador,Jornada,Sector,Huerto,Lote
-from .forms import ContactoForm,ProcesoForm,ProcesoModificarForm,TrabajadorForm,FormatoForm,TrabajadorModificarForm,JornadaModificarForm,SectorModificarForm,HuertoModificarForm,LoteModificarForm
+from .models import Procesos ,Trabajador,Jornada,Sector,Huerto,Lote,Finanzas,FinanzasPorMes,GastoFinanciero
+from .forms import ContactoForm,ProcesoForm,ProcesoModificarForm,TrabajadorForm,FormatoForm,TrabajadorModificarForm,JornadaModificarForm,SectorModificarForm,HuertoModificarForm,LoteModificarForm,GastoFinancieroForm
 from django.contrib import messages
 from django.http import Http404
 #api
@@ -292,7 +292,7 @@ def agregar_jornada(request):
 class JornadaListView(ListView):
     queryset = Jornada.objects.all()
     form_class = FormatoForm
-    paginate_by = 3
+    paginate_by = 4
     template_name = 'agrosmart/jornada/gestion_jornadas.html'
     context_object_name = 'jornadas'
 
@@ -488,18 +488,19 @@ def agregar_lote(request):
 def cargar_huertos(request):
     sector_id = request.GET.get('sector_id')
     huertos = Huerto.objects.filter(sector_id=sector_id)
-    huertos_data = [{'id': huerto.id, 'nombre': huerto.nombre} for huerto in huertos]
-    return JsonResponse({'huertos': huertos_data})
-
-from django.http import JsonResponse
+    huertos_list = list(huertos.values('id', 'nombre'))
+    return JsonResponse({'huertos': huertos_list})
 
 def cargar_lotes(request):
     huerto_id = request.GET.get('huerto_id')
-    lotes = Lote.objects.filter(huerto_id=huerto_id)
-    lotes_data = [{'id': lote.id, 'nombre': lote.nombre} for lote in lotes]
-    return JsonResponse({'lotes': lotes_data})
-
-
+    if huerto_id == 'todos':
+        # Si es 'todos', podrías devolver todos los lotes de ese sector si lo deseas
+        # Aquí solo como ejemplo, retornamos todos los lotes
+        lotes = Lote.objects.all()
+    else:
+        lotes = Lote.objects.filter(huerto_id=huerto_id)
+    lotes_list = list(lotes.values('id', 'nombre'))
+    return JsonResponse({'lotes': lotes_list})
 
 
 
@@ -611,7 +612,22 @@ def user_logout(request):
     auth.logout(request)
     return redirect ("home")
 
+def FinanzasList(request):
+    finanzas = Finanzas.objects.all()
+    finanzas_por_mes = FinanzasPorMes.objects.all()
+    gastos_por_mes = GastoFinanciero.objects.gastos_por_mes()
+    
+    return render(request, 'agrosmart/finanzas/gestion_finanzas.html', {'finanzas': finanzas,'finanzas_por_mes': finanzas_por_mes,'gastos_por_mes':gastos_por_mes})
 
+###gasto financiero 
+def agregar_gasto_financiero(request):
+    if request.method == 'POST':
+        form = GastoFinancieroForm(request.POST)
+        if form.is_valid():
+            form.save()  # El método save() en el modelo ya maneja la actualización de FinanzasPorMes
+            return redirect('gestion_finanzas')  # Reemplaza con el nombre de la vista a la que quieres redirigir después de guardar
+    else:
+        form = GastoFinancieroForm()
+    
+    return render(request, 'agrosmart/finanzas/agregar_gasto_financiero.html', {'form': form})
 
-
- 

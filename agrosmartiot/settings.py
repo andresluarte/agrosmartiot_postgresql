@@ -25,9 +25,9 @@ import pytz
 SECRET_KEY = 'django-insecure-i+h^ifkudr)+q*__he#@n=#=q*rk17-b!3^ns4vmt+5og7sqz1'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['agrosmartiot  .herokuapp.com']
 
 MESSAGE_STORAGE = "django.contrib.messages.storage.cookie.CookieStorage"
 
@@ -88,11 +88,13 @@ DATABASES = {
     'default': 
         {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-         'NAME': 'd19jiqb2kb2vn0', #nombre de la base de datos
-         'USER':'uf38ta0aviljmb', #nombre dl usuario (cuando se instala postgres)
-         'PASSWORD':'p8e487a3c05d4f6dd6a3c6132070f340eb958877c69baff6727d7367f88717888', #password cuando se crea postgree
-         'HOST':'c5flugvup2318r.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com', #localhost es el nombre del host cuando se instala
-         'DATABASE_PORT':'5432', # database port == 5432
+         'HOST':'localhost',
+         'PORT':'5432',
+         'NAME':'agrosmartiot',
+         'USER':'postgres',
+         'PASSWORD':'password',
+
+
         }
 } 
 # DATABASES = {
@@ -149,7 +151,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 STATIC_URL='/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+STATIC_ROOT=os.path.join(BASE_DIR,'staticfiles')
+#STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = (os.path.join(BASE_DIR,'static'),)
 
 import os
 
@@ -159,8 +164,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 STATICFILES_STORAGE='whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 #kafka
-KAFKA_SERVER = 'localhost:9092'
-KAFKA_TOPIC = 'temperatura-topic'
 
 #New start
 db_from_env = dj_database_url.config(conn_max_age=500)
