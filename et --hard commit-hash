@@ -1,0 +1,35 @@
+[33mcommit a25b6c30ced2140b649a9c5a714d78118b95d36f[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31mheroku/main[m[33m)[m
+Author: unknown <andy.luarte@gmail.com>
+Date:   Fri Jul 12 17:41:55 2024 -0400
+
+    Cambio GASTOS_FINANCIEROS
+
+[33mcommit f8ff6c9698030f39a304fbbf82ce1f3ebb3b9c30[m[33m ([m[1;31mnew-origin/main[m[33m)[m
+Author: unknown <andy.luarte@gmail.com>
+Date:   Thu Jul 11 06:46:43 2024 -0400
+
+    Fixed static files configuration and references
+
+[33mcommit bc2eef8890abfc65b9ad2292df06b985ec6a1d62[m[33m ([m[1;31morigin/main[m[33m)[m
+Author: unknown <andy.luarte@gmail.com>
+Date:   Thu Jul 11 05:46:50 2024 -0400
+
+    first commit
+
+[33mcommit 3ef0473350798cd2ad2b098140e5cf5878cdf083[m
+Author: unknown <andy.luarte@gmail.com>
+Date:   Mon Jun 17 16:18:38 2024 -0400
+
+    Agregar basededatos
+
+[33mcommit 434c497536cc818c25d3d21d12215891d07ec5c3[m
+Author: unknown <andy.luarte@gmail.com>
+Date:   Wed Jun 12 06:13:40 2024 -0400
+
+    Agregar gunicorn a requirements.txt
+
+[33mcommit e479126b723e7708be13ab2e88c7f7aae7614359[m
+Author: unknown <andy.luarte@gmail.com>
+Date:   Wed Jun 12 04:53:59 2024 -0400
+
+    first commit

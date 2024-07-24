@@ -524,20 +524,22 @@ def eliminarhuerto(request, id):
 #     messages.success(request, "Eliminado Correctamente")
 #     return redirect('gestiondetareas')
 # en views.py
+from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 
+@csrf_exempt
 def receive_data(request):
     if request.method == 'POST':
-        temperature = request.POST.get('temperature')
-        humidity = request.POST.get('humidity')
-        
-        # Aquí puedes realizar cualquier procesamiento necesario con los datos
-        # Por ejemplo, guardarlos en la base de datos
+        # Procesar los datos aquí
+        data = request.POST
+        temperature = data.get('temperature')
+        humidity = data.get('humidity')
+        ds18b20_temp = data.get('ds18b20_temp')
 
-        # Retorna una respuesta exitosa al módulo SIM800L
-        return JsonResponse({'message': 'Data received successfully'}, status=200)
-
-    return JsonResponse({'message': 'Invalid request method'}, status=400)
+        # Lógica para manejar los datos
+        return JsonResponse({"status": "success"})
+    else:
+        return JsonResponse({"message": "Invalid request method"}, status=405)
 from django.http import JsonResponse
 
 def obtener_cobro_view(request):
