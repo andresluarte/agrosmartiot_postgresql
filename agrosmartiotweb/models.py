@@ -246,7 +246,11 @@ class Jornada(models.Model):
 class TemperatureHumidity(models.Model):
     temperature = models.FloatField()
     humidity = models.FloatField()
-    timestamp = models.DateTimeField(auto_now_add=True)
+    
+    timestamp = models.DateTimeField(auto_now_add=True)  # Para registrar cuándo se recibió cada dato
+
+    def __str__(self):
+        return f"Temp: {self.temperature}, Humidity: {self.humidity}"
 # temperatura_app/models.py
 #treeforeingkey
 #MODELO USUARIO

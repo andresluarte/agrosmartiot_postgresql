@@ -527,6 +527,9 @@ def eliminarhuerto(request, id):
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
 @csrf_exempt
 def receive_data(request):
     if request.method == 'POST':
@@ -534,12 +537,21 @@ def receive_data(request):
         data = request.POST
         temperature = data.get('temperature')
         humidity = data.get('humidity')
-        ds18b20_temp = data.get('ds18b20_temp')
+        
 
-        # Lógica para manejar los datos
+        # Guardar los datos en la base de datos
+        # Suponiendo que tienes un modelo TemperatureHumidity para almacenar estos datos
+        from .models import TemperatureHumidity
+        TemperatureHumidity.objects.create(
+            temperature=temperature,
+            humidity=humidity,
+            
+        )
+
         return JsonResponse({"status": "success"})
     else:
         return JsonResponse({"message": "Invalid request method"}, status=405)
+
 from django.http import JsonResponse
 
 def obtener_cobro_view(request):
@@ -570,7 +582,7 @@ class TemperatureHumidityAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 def temperature_humidity_list(request):
-    data = TemperatureHumidity.objects.all()
+    data = TemperatureHumidity.objects.all().order_by('-timestamp')
     return render(request, 'agrosmart/tiemporeal.html', {'data': data})
 
 #authentication 
