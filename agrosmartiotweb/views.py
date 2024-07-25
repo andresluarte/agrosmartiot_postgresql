@@ -582,8 +582,9 @@ class TemperatureHumidityAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 def temperature_humidity_list(request):
-    data = TemperatureHumidity.objects.all().order_by('-timestamp')
-    return render(request, 'agrosmart/tiemporeal.html', {'data': data})
+    # Obtener la última entrada
+    latest_data = TemperatureHumidity.objects.last()
+    return render(request, 'agrosmart/temperature_humidity_list.html', {'latest_data': latest_data})
 
 #authentication 
 from django.contrib.auth.models import Group

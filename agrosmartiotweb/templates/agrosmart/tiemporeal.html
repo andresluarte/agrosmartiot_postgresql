@@ -1,22 +1,63 @@
-{% extends 'agrosmart/base.html' %} 
+{% extends 'agrosmart/base.html' %}
 
 {% block contenido %}
 {% load static %}
 
-
-<!-- En temperature_humidity_list.html -->
 <!DOCTYPE html>
 <html>
 <head>
     <title>Temperature and Humidity Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .data {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .data div {
+            margin: 0 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .timestamp {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #555;
+        }
+    </style>
+    <script>
+        // Recargar la página cada 2 segundos
+        setTimeout(function(){
+            window.location.reload(1);
+        }, 2000);
+    </script>
 </head>
 <body>
-    <h1>Temperature and Humidity Data</h1>
-    <ul>
-        {% for entry in data %}
-            <li>Temperature: {{ entry.temperature }}, Humidity: {{ entry.humidity }}, Timestamp: {{ entry.timestamp }}</li>
-        {% endfor %}
-    </ul>
+    <div class="container">
+        <h1>Temperature and Humidity Data</h1>
+        <div class="data">
+            <div>
+                <strong>Temperature:</strong> <span>{{ latest_data.temperature }}°C</span>
+            </div>
+            <div>
+                <strong>Humidity:</strong> <span>{{ latest_data.humidity }}%</span>
+            </div>
+        </div>
+        <div class="timestamp">
+            Last updated: {{ latest_data.timestamp }}
+        </div>
+    </div>
 </body>
 </html>
 {% endblock %}
