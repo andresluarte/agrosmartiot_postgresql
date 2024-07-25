@@ -1,15 +1,64 @@
+{% extends 'agrosmart/base.html' %} 
+
+{% block contenido %}
+{% load static %}
+
+
 <!-- En temperature_humidity_list.html -->
+<!DOCTYPE html>
 <!DOCTYPE html>
 <html>
 <head>
     <title>Temperature and Humidity Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(to right, #6dd5fa, #2980b9);
+            color: #fff;
+        }
+        .container {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .data {
+            font-size: 2em;
+            margin: 10px 0;
+        }
+        .timestamp {
+            font-size: 0.8em;
+            color: #ddd;
+        }
+    </style>
+    <script>
+        setInterval(function() {
+            location.reload();
+        }, 2000);
+    </script>
 </head>
 <body>
-    <h1>Temperature and Humidity Data</h1>
-    <ul>
-        {% for entry in data %}
-            <li>Temperature: {{ entry.temperature }}, Humidity: {{ entry.humidity }}, Timestamp: {{ entry.timestamp }}</li>
-        {% endfor %}
-    </ul>
+    <div class="container">
+        <h1>Temperature and Humidity Data</h1>
+        {% if data %}
+            <div class="data">
+                Temperature: {{ data.temperature }}°C
+            </div>
+            <div class="data">
+                Humidity: {{ data.humidity }}%
+            </div>
+            <div class="timestamp">
+                Last updated: {{ data.timestamp }}
+            </div>
+        {% else %}
+            <p>No data available</p>
+        {% endif %}
+    </div>
 </body>
 </html>
+
+{% endblock %}

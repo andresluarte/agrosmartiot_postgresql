@@ -533,22 +533,15 @@ from django.views.decorators.csrf import csrf_exempt
 @csrf_exempt
 def receive_data(request):
     if request.method == 'POST':
-        # Procesar los datos aquí
         data = request.POST
         temperature = data.get('temperature')
         humidity = data.get('humidity')
-        
 
-        # Guardar los datos en la base de datos
-        # Suponiendo que tienes un modelo TemperatureHumidity para almacenar estos datos
-        from .models import TemperatureHumidity
-        TemperatureHumidity.objects.create(
-            temperature=temperature,
-            humidity=humidity,
-            
-        )
-
-        return JsonResponse({"status": "success"})
+        if temperature and humidity:
+            TemperatureHumidity.objects.create(temperature=temperature, humidity=humidity)
+            return JsonResponse({"status": "success"})
+        else:
+            return JsonResponse({"message": "Invalid data"}, status=400)
     else:
         return JsonResponse({"message": "Invalid request method"}, status=405)
 
