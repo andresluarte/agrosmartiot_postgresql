@@ -649,23 +649,30 @@ def agregar_gasto_financiero(request):
 
 from .models import SensorData
 
+
+from django.http import JsonResponse
+from .models import SensorData
 @csrf_exempt
 def receive_data_gps(request):
     if request.method == 'POST':
-        data = request.POST
-        latitude = data.get('latitude')
-        longitude = data.get('longitude')
-
-        if latitude and longitude:
+        try:
+            latitude = float(request.POST.get('latitude'))
+            longitude = float(request.POST.get('longitude'))
+            
+            # Guardar los datos en la base de datos
             SensorData.objects.create(
                 latitude=latitude,
                 longitude=longitude
             )
+            
             return JsonResponse({"status": "success"})
-        else:
-            return JsonResponse({"status": "error", "message": "Missing latitude or longitude"})
+        except Exception as e:
+            # Registra el error y devuelve una respuesta de error
+            print(f"Error: {e}")
+            return JsonResponse({"status": "error", "message": str(e)}, status=500)
+    else:
+        return JsonResponse({"message": "Invalid request method"}, status=405)
 
-    return JsonResponse({"message": "Invalid request method"}, status=405)
 def gps_data_view(request):
     latest_data = SensorData.objects.latest('timestamp')
     return render(request, 'agrosmart/tiemporeal.html', {'latest_data': latest_data})
