@@ -48,14 +48,14 @@ class Lote(models.Model):
         return self.nombre
 
 
+
 class SensorData(models.Model):
-    temperature = models.FloatField()
     latitude = models.FloatField()
     longitude = models.FloatField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.temperature
+        return f"{self.latitude}, {self.longitude}"
 
 
 

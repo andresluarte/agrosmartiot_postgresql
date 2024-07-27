@@ -646,3 +646,26 @@ def agregar_gasto_financiero(request):
     
     return render(request, 'agrosmart/finanzas/agregar_gasto_financiero.html', {'form': form})
 
+
+from .models import SensorData
+
+@csrf_exempt
+def receive_data_gps(request):
+    if request.method == 'POST':
+        data = request.POST
+        latitude = data.get('latitude')
+        longitude = data.get('longitude')
+
+        if latitude and longitude:
+            SensorData.objects.create(
+                latitude=latitude,
+                longitude=longitude
+            )
+            return JsonResponse({"status": "success"})
+        else:
+            return JsonResponse({"status": "error", "message": "Missing latitude or longitude"})
+
+    return JsonResponse({"message": "Invalid request method"}, status=405)
+def gps_data_view(request):
+    latest_data = SensorData.objects.latest('timestamp')
+    return render(request, 'agrosmart/tiemporeal.html', {'latest_data': latest_data})
