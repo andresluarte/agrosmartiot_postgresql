@@ -91,7 +91,7 @@ urlpatterns = [
    
     path('agregar_gasto_financiero/', views.agregar_gasto_financiero, name='agregar_gasto_financiero'),
 
-    path('receive-data-gps/', views.receive_data_gps, name='receive_data_gps'),
+
     path('gps-data/', views.gps_data_view, name='gps_data_view'),
 
  

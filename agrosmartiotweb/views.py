@@ -533,22 +533,27 @@ from django.views.decorators.csrf import csrf_exempt
 @csrf_exempt
 def receive_data(request):
     if request.method == 'POST':
-        # Procesar los datos aquí
-        data = request.POST
-        temperature = data.get('temperature')
-        humidity = data.get('humidity')
-        
-
-        # Guardar los datos en la base de datos
-        # Suponiendo que tienes un modelo TemperatureHumidity para almacenar estos datos
-        from .models import TemperatureHumidity
-        TemperatureHumidity.objects.create(
-            temperature=temperature,
-            humidity=humidity,
+        try:
+            temperature = float(request.POST.get('temperature'))
+            humidity = float(request.POST.get('humidity'))
+            latitude = float(request.POST.get('latitude'))
+            longitude = float(request.POST.get('longitude'))
             
-        )
-
-        return JsonResponse({"status": "success"})
+            # Guardar los datos en la base de datos
+            TemperatureHumidity.objects.create(
+                temperature=temperature,
+                humidity=humidity
+            )
+            SensorData.objects.create(
+                latitude=latitude,
+                longitude=longitude
+            )
+            
+            return JsonResponse({"status": "success"})
+        except Exception as e:
+            # Registra el error y devuelve una respuesta de error
+            print(f"Error: {e}")
+            return JsonResponse({"status": "error", "message": str(e)}, status=500)
     else:
         return JsonResponse({"message": "Invalid request method"}, status=405)
 
@@ -650,28 +655,7 @@ def agregar_gasto_financiero(request):
 from .models import SensorData
 
 
-from django.http import JsonResponse
-from .models import SensorData
-@csrf_exempt
-def receive_data_gps(request):
-    if request.method == 'POST':
-        try:
-            latitude = float(request.POST.get('latitude'))
-            longitude = float(request.POST.get('longitude'))
-            
-            # Guardar los datos en la base de datos
-            SensorData.objects.create(
-                latitude=latitude,
-                longitude=longitude
-            )
-            
-            return JsonResponse({"status": "success"})
-        except Exception as e:
-            # Registra el error y devuelve una respuesta de error
-            print(f"Error: {e}")
-            return JsonResponse({"status": "error", "message": str(e)}, status=500)
-    else:
-        return JsonResponse({"message": "Invalid request method"}, status=405)
+
 
 def gps_data_view(request):
     latest_data = SensorData.objects.latest('timestamp')
