@@ -584,12 +584,12 @@ def obtener_cobro_view(request):
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import TemperatureHumidity
-from .serializers import TemperatureHumiditySerializer
+from .models import TemperatureHumidityLocation
+from .serializers import TemperatureHumidityLocationSerializer
 
 class TemperatureHumidityAPIView(APIView):
     def post(self, request, format=None):
-        serializer = TemperatureHumiditySerializer(data=request.data)
+        serializer = TemperatureHumidityLocationSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
