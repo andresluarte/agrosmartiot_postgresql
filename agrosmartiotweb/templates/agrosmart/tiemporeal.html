@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Temperature, Humidity, and GPS Data</title>
+    <title>Temperature, Humidity and Location Data</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -35,10 +35,6 @@
             font-size: 18px;
             color: #555;
         }
-        .map-link {
-            margin-top: 20px;
-            font-size: 18px;
-        }
     </style>
     <script>
         // Recargar la página cada 2 segundos
@@ -49,7 +45,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Temperature, Humidity, and GPS Data</h1>
+        <h1>Temperature, Humidity and Location Data</h1>
         <div class="data">
             <div>
                 <strong>Temperature:</strong> <span>{{ latest_data.temperature }}°C</span>
@@ -57,21 +53,14 @@
             <div>
                 <strong>Humidity:</strong> <span>{{ latest_data.humidity }}%</span>
             </div>
-        </div>
-        <br>
-        <br>
-        <br>
-        <br>
-        <div class="data">
             <div>
-                <strong>Latitude:</strong> <span>{{ latest_data.latitude }}</span>
+                <strong>Location:</strong> 
+                <span>
+                    <a href="https://www.google.com/maps/search/?api=1&query={{ latest_data.latitude }},{{ latest_data.longitude }}" target="_blank">
+                        Google Maps
+                    </a>
+                </span>
             </div>
-            <div>
-                <strong>Longitude:</strong> <span>{{ latest_data.longitude }}</span>
-            </div>
-        </div>
-        <div class="map-link">
-            <a href="https://www.google.com/maps?q={{ latest_data.latitude }},{{ latest_data.longitude }}" target="_blank">View on Google Maps</a>
         </div>
         <div class="timestamp">
             Last updated: {{ latest_data.timestamp }}

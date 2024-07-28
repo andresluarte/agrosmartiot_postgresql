@@ -530,32 +530,41 @@ from django.http import JsonResponse
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from .models import TemperatureHumidityLocation
+
 @csrf_exempt
 def receive_data(request):
     if request.method == 'POST':
-        try:
-            temperature = float(request.POST.get('temperature'))
-            humidity = float(request.POST.get('humidity'))
-            latitude = float(request.POST.get('latitude'))
-            longitude = float(request.POST.get('longitude'))
-            
-            # Guardar los datos en la base de datos
-            TemperatureHumidity.objects.create(
-                temperature=temperature,
-                humidity=humidity
-            )
-            SensorData.objects.create(
-                latitude=latitude,
-                longitude=longitude
-            )
-            
-            return JsonResponse({"status": "success"})
-        except Exception as e:
-            # Registra el error y devuelve una respuesta de error
-            print(f"Error: {e}")
-            return JsonResponse({"status": "error", "message": str(e)}, status=500)
+        data = request.POST
+        temperature = data.get('temperature')
+        humidity = data.get('humidity')
+        latitude = data.get('latitude')
+        longitude = data.get('longitude')
+
+        if temperature and humidity and latitude and longitude:
+            try:
+                temperature = float(temperature)
+                humidity = float(humidity)
+                latitude = float(latitude)
+                longitude = float(longitude)
+
+                TemperatureHumidityLocation.objects.create(
+                    temperature=temperature,
+                    humidity=humidity,
+                    latitude=latitude,
+                    longitude=longitude
+                )
+
+                return JsonResponse({"status": "success"})
+            except ValueError as e:
+                return JsonResponse({"status": "error", "message": str(e)}, status=400)
+        else:
+            return JsonResponse({"status": "error", "message": "Missing data fields"}, status=400)
     else:
         return JsonResponse({"message": "Invalid request method"}, status=405)
+
 
 from django.http import JsonResponse
 

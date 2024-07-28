@@ -243,14 +243,18 @@ class Jornada(models.Model):
             finanzas_por_mes.save()
 
  
-class TemperatureHumidity(models.Model):
+
+
+class TemperatureHumidityLocation(models.Model):
     temperature = models.FloatField()
     humidity = models.FloatField()
-    
-    timestamp = models.DateTimeField(auto_now_add=True)  # Para registrar cuándo se recibió cada dato
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+    timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Temp: {self.temperature}, Humidity: {self.humidity}"
+        return f"Temperature: {self.temperature}, Humidity: {self.humidity}, Latitude: {self.latitude}, Longitude: {self.longitude}"
+
 # temperatura_app/models.py
 #treeforeingkey
 #MODELO USUARIO
