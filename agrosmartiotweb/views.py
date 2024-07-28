@@ -597,7 +597,7 @@ class TemperatureHumidityAPIView(APIView):
     
 def temperature_humidity_list(request):
     # Obtener la última entrada
-    latest_data = TemperatureHumidity.objects.last()
+    latest_data = TemperatureHumidityLocation.objects.last()
     return render(request, 'agrosmart/tiemporeal.html', {'latest_data': latest_data})
 
 #authentication 
