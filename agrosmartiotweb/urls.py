@@ -91,6 +91,9 @@ urlpatterns = [
    
     path('agregar_gasto_financiero/', views.agregar_gasto_financiero, name='agregar_gasto_financiero'),
 
+    path('receive-data-soil/', views.receive_data_soil, name='receive_data_soil'),
+    path('tiemporealsoil/', views.combined_data_view_soil, name='combined_data_view_soil'),
+
 
   
 

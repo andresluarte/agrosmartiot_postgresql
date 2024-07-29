@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="2">
+    <title>Soil Humidity Real-Time Data</title>
+</head>
+<body>
+    <h1>Soil Humidity Real-Time Data</h1>
+    {% if latest_data %}
+        <p>Humidity: {{ latest_data.humidity }}%</p>
+        <p>Timestamp: {{ latest_data.timestamp }}</p>
+    {% else %}
+        <p>No data available.</p>
+    {% endif %}
+</body>
+</html>

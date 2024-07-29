@@ -249,6 +249,13 @@ class TemperatureHumidityLocation(models.Model):
     def __str__(self):
         return f"Temperature: {self.temperature}, Humidity: {self.humidity}, Latitude: {self.latitude}, Longitude: {self.longitude}"
 
+class HumiditySoil(models.Model):
+    humiditysoil = models.FloatField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Humidity: {self.humiditysoil}, Timestamp: {self.timestamp}"
+
 # temperatura_app/models.py
 #treeforeingkey
 #MODELO USUARIO

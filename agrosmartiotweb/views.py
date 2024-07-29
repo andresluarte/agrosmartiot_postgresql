@@ -560,6 +560,35 @@ def receive_data(request):
         return JsonResponse({"status": "success"})
     else:
         return JsonResponse({"message": "Invalid request method"}, status=405)
+    
+from .models import HumiditySoil
+def combined_data_view_soil(request):
+    latest_data = HumiditySoil.objects.last()
+    return render(request, 'agrosmart/tiemporealsoil.html', {'latest_data': latest_data})
+@csrf_exempt
+def receive_data_soil(request):
+    if request.method == 'POST':
+        # Procesar los datos aquí
+        data = request.POST
+        
+        humiditysoil = data.get('humiditysoil')
+  
+        
+
+        # Guardar los datos en la base de datos
+        # Suponiendo que tienes un modelo TemperatureHumidity para almacenar estos datos
+        from .models import HumiditySoil
+        HumiditySoil.objects.create(
+           
+            humidity=humiditysoil,
+          
+            
+        )
+
+        return JsonResponse({"status": "success"})
+    else:
+        return JsonResponse({"message": "Invalid request method"}, status=405)
+
 
 
 from django.http import JsonResponse
