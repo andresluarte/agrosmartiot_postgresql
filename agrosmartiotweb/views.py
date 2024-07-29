@@ -595,7 +595,7 @@ class TemperatureHumidityAPIView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-def temperature_humidity_list(request):
+def combined_data_view(request):
     # Obtener la última entrada
     latest_data = TemperatureHumidityLocation.objects.last()
     return render(request, 'agrosmart/tiemporeal.html', {'latest_data': latest_data})
@@ -664,8 +664,3 @@ def agregar_gasto_financiero(request):
 from .models import SensorData
 
 
-
-
-def gps_data_view(request):
-    latest_data = SensorData.objects.latest('timestamp')
-    return render(request, 'agrosmart/tiemporeal.html', {'latest_data': latest_data})

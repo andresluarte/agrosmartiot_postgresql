@@ -73,7 +73,7 @@ urlpatterns = [
 
 
     path('api/temperature-humidity/', views.  TemperatureHumidityAPIView.as_view(), name='temperature-humidity'),
-    path('tiemporeal/', views.temperature_humidity_list, name='tiemporeal'),
+    path('tiemporeal/', views.combined_data_view, name='tiemporeal'),
 
 
 
@@ -92,10 +92,7 @@ urlpatterns = [
     path('agregar_gasto_financiero/', views.agregar_gasto_financiero, name='agregar_gasto_financiero'),
 
 
-    path('gps-data/', views.gps_data_view, name='gps_data_view'),
-
- 
-
+  
 
 
 ]
