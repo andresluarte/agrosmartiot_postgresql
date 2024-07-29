@@ -66,74 +66,65 @@
                 width: 100%;
             }
         </style>
-        <script type="module">
+        <script>
             let map, marker;
 
-            async function initMap() {
-                console.log('initMap called');
+            function initMap() {
                 const lat = parseFloat('{{ latest_data.latitude|default:"0" }}');
                 const lng = parseFloat('{{ latest_data.longitude|default:"0" }}');
 
-                if (isNaN(lat) || isNaN(lng)) {
-                    console.error('Invalid latitude or longitude:', lat, lng);
-                    return;
-                }
-
+                // Verificar que el contenedor del mapa esté presente
                 const mapContainer = document.getElementById('map');
-                if (!mapContainer || mapContainer.clientHeight === 0 || mapContainer.clientWidth === 0) {
-                    console.error("Contenedor del mapa no válido o no visible");
+                if (!mapContainer) {
+                    console.error("Contenedor del mapa no encontrado");
                     return;
                 }
 
-                const { Map } = await google.maps.importLibrary("maps");
-                const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
-
-                map = new Map(mapContainer, {
+                // Crear un mapa en el contenedor con ID 'map'
+                map = new google.maps.Map(mapContainer, {
                     center: { lat: lat, lng: lng },
                     zoom: 12
                 });
 
-                marker = new AdvancedMarkerElement({
-                    map: map,
+                // Crear un marcador en la ubicación del sensor usando AdvancedMarkerElement
+                marker = new google.maps.marker.AdvancedMarkerElement({
                     position: { lat: lat, lng: lng },
+                    map: map,
                     title: 'Sensor Location'
                 });
-                console.log('Map and marker initialized');
             }
 
-            async function updateMap() {
+            function updateMap() {
                 const lat = parseFloat('{{ latest_data.latitude|default:"0" }}');
                 const lng = parseFloat('{{ latest_data.longitude|default:"0" }}');
 
-                if (isNaN(lat) || isNaN(lng)) {
-                    console.error('Invalid latitude or longitude:', lat, lng);
-                    return;
-                }
-
                 if (map) {
+                    // Eliminar el marcador anterior si existe
                     if (marker) {
                         marker.setMap(null);
                     }
 
-                    const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
-                    marker = new AdvancedMarkerElement({
-                        map: map,
+                    // Crear un nuevo marcador en la nueva ubicación
+                    marker = new google.maps.marker.AdvancedMarkerElement({
                         position: { lat: lat, lng: lng },
+                        map: map,
                         title: 'Sensor Location'
                     });
 
+                    // Actualizar el centro del mapa
                     map.setCenter({ lat: lat, lng: lng });
                 }
             }
 
             document.addEventListener('DOMContentLoaded', function () {
+                // Cargar la API de Google Maps de manera asíncrona para un mejor rendimiento
                 const script = document.createElement('script');
-                script.type = 'module';
                 script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDT0QJ4JVXUrTA8mRZN_YXjy2CZDsa_vmw&callback=initMap&libraries=maps,marker&v=beta";
                 script.defer = true;
                 script.async = true;
                 document.head.appendChild(script);
-
+                
+                // Actualiza el mapa cada 2 segundos
                 setInterval(updateMap, 2000);
             });
         </script>
