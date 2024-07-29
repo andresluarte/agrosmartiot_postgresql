@@ -1,6 +1,3 @@
-{% extends 'agrosmart/base.html' %}
-
-{% block contenido %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -72,15 +69,19 @@
         let marker;
 
         function initMap() {
+            // Coordenadas iniciales
+            const lat = parseFloat('{{ latest_data.latitude|default:"0" }}');
+            const lng = parseFloat('{{ latest_data.longitude|default:"0" }}');
+
             // Crear un mapa en el contenedor con ID 'map'
             map = new google.maps.Map(document.getElementById('map'), {
-                center: { lat: parseFloat('{{ latest_data.latitude }}'), lng: parseFloat('{{ latest_data.longitude }}') },
+                center: { lat: lat, lng: lng },
                 zoom: 12
             });
 
             // Crear un marcador en la ubicación del sensor
             marker = new google.maps.Marker({
-                position: { lat: parseFloat('{{ latest_data.latitude }}'), lng: parseFloat('{{ latest_data.longitude }}') },
+                position: { lat: lat, lng: lng },
                 map: map,
                 title: 'Sensor Location'
             });
@@ -88,8 +89,8 @@
 
         function updateMap() {
             // Actualiza el mapa con la nueva ubicación
-            const newLat = parseFloat('{{ latest_data.latitude }}');
-            const newLng = parseFloat('{{ latest_data.longitude }}');
+            const newLat = parseFloat('{{ latest_data.latitude|default:"0" }}');
+            const newLng = parseFloat('{{ latest_data.longitude|default:"0" }}');
             
             map.setCenter({ lat: newLat, lng: newLng });
             marker.setPosition({ lat: newLat, lng: newLng });
@@ -145,4 +146,3 @@
     </div>
 </body>
 </html>
-{% endblock %}
