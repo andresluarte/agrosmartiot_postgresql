@@ -537,31 +537,27 @@ from .models import TemperatureHumidityLocation
 @csrf_exempt
 def receive_data(request):
     if request.method == 'POST':
+        # Procesar los datos aquí
         data = request.POST
         temperature = data.get('temperature')
         humidity = data.get('humidity')
-        latitude = data.get('latitude')
-        longitude = data.get('longitude')
+        latitude=data.get('latitude')
+        longitude=data.get('longitude')
+        
 
-        if temperature and humidity and latitude and longitude:
-            try:
-                temperature = float(temperature)
-                humidity = float(humidity)
-                latitude = float(latitude)
-                longitude = float(longitude)
+        # Guardar los datos en la base de datos
+        # Suponiendo que tienes un modelo TemperatureHumidity para almacenar estos datos
+        from .models import TemperatureHumidityLocation
+        TemperatureHumidityLocation.objects.create(
+            temperature=temperature,
+            humidity=humidity,
+            latitude=latitude,
+            longitude=longitude
 
-                TemperatureHumidityLocation.objects.create(
-                    temperature=temperature,
-                    humidity=humidity,
-                    latitude=latitude,
-                    longitude=longitude
-                )
+            
+        )
 
-                return JsonResponse({"status": "success"})
-            except ValueError as e:
-                return JsonResponse({"status": "error", "message": str(e)}, status=400)
-        else:
-            return JsonResponse({"status": "error", "message": "Missing data fields"}, status=400)
+        return JsonResponse({"status": "success"})
     else:
         return JsonResponse({"message": "Invalid request method"}, status=405)
 
