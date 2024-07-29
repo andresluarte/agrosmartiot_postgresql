@@ -747,4 +747,4 @@ def informes(request):
         'ubicaciones_data': ubicaciones_data,
     }
     
-    return render(request, 'informes.html', context)
+    return render(request, 'agrosmart/informes.html', context)
