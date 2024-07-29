@@ -661,6 +661,5 @@ def agregar_gasto_financiero(request):
     return render(request, 'agrosmart/finanzas/agregar_gasto_financiero.html', {'form': form})
 
 
-from .models import SensorData
 
 
