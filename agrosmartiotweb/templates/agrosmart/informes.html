@@ -1,5 +1,78 @@
 {% extends 'agrosmart/base.html' %} 
 
 {% block contenido %}
+
 {% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informes</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+    <h1>Informes de Datos</h1>
+    
+    <h2>Temperatura y Humedad</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Hora</th>
+                <th>Temperatura Promedio</th>
+                <th>Humedad Promedio</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in temp_humidity_data %}
+            <tr>
+                <td>{{ entry.hour }}</td>
+                <td>{{ entry.avg_temp }}</td>
+                <td>{{ entry.avg_humidity }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3">No hay datos disponibles</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <h2>Humedad del Suelo</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Hora</th>
+                <th>Humedad del Suelo Promedio</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in soil_data %}
+            <tr>
+                <td>{{ entry.hour }}</td>
+                <td>{{ entry.avg_humidity_soil }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="2">No hay datos disponibles</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
+    
 {% endblock %}

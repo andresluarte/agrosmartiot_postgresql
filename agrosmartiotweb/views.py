@@ -686,4 +686,31 @@ def agregar_gasto_financiero(request):
 
 
 
-
+from django.shortcuts import render
+from django.db.models import Avg, DateTimeField
+from django.db.models.functions import TruncHour
+def informes(request):
+    # Promedio por hora para TemperatureHumidityLocation
+    temp_humidity_data = (
+        TemperatureHumidityLocation.objects
+        .annotate(hour=TruncHour('timestamp'))
+        .values('hour')
+        .annotate(avg_temp=Avg('temperature'), avg_humidity=Avg('humidity'))
+        .order_by('hour')
+    )
+    
+    # Promedio por hora para HumiditySoil
+    soil_data = (
+        HumiditySoil.objects
+        .annotate(hour=TruncHour('timestamp'))
+        .values('hour')
+        .annotate(avg_humidity_soil=Avg('humiditysoil'))
+        .order_by('hour')
+    )
+    
+    context = {
+        'temp_humidity_data': temp_humidity_data,
+        'soil_data': soil_data,
+    }
+    
+    return render(request, 'agrosmart/informes.html', context)
