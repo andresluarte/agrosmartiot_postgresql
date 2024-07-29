@@ -79,8 +79,8 @@
                     zoom: 12
                 });
 
-                // Crear un marcador en la ubicación del sensor
-                marker = new google.maps.Marker({
+                // Crear un marcador en la ubicación del sensor usando AdvancedMarkerElement
+                marker = new google.maps.marker.AdvancedMarkerElement({
                     position: { lat: lat, lng: lng },
                     map: map,
                     title: 'Sensor Location'
@@ -102,7 +102,8 @@
                 // Cargar la API de Google Maps de manera asíncrona para un mejor rendimiento
                 const script = document.createElement('script');
                 script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDT0QJ4JVXUrTA8mRZN_YXjy2CZDsa_vmw&callback=initMap&libraries=maps,marker&v=beta";
-                script.async = true;
+                script.defer = true; // Cambiado a defer
+                script.async = true; // Asegúrate de que sea asíncrono
                 document.head.appendChild(script);
                 
                 // Actualiza el mapa cada 2 segundos
