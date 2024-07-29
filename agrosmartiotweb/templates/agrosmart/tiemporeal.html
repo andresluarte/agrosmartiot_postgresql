@@ -61,49 +61,46 @@
                 flex: 1 1 100%;
             }
         }
+        #map {
+            height: 500px;
+            width: 100%;
+        }
     </style>
-    <script>
-        // Recargar la página cada 2 segundos
-        setTimeout(function(){
-            window.location.reload(1);
-        }, 2000);
-    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDT0QJ4JVXUrTA8mRZN_YXjy2CZDsa_vmw"></script>
     <script>
         let map;
-    
+        let marker;
+
         function initMap() {
             // Crear un mapa en el contenedor con ID 'map'
             map = new google.maps.Map(document.getElementById('map'), {
-                center: { lat: {{ latest_data.latitude }}, lng: {{ latest_data.longitude }} },
+                center: { lat: parseFloat('{{ latest_data.latitude }}'), lng: parseFloat('{{ latest_data.longitude }}') },
                 zoom: 12
             });
-    
+
             // Crear un marcador en la ubicación del sensor
-            new google.maps.Marker({
-                position: { lat: {{ latest_data.latitude }}, lng: {{ latest_data.longitude }} },
+            marker = new google.maps.Marker({
+                position: { lat: parseFloat('{{ latest_data.latitude }}'), lng: parseFloat('{{ latest_data.longitude }}') },
                 map: map,
                 title: 'Sensor Location'
             });
         }
-    
+
         function updateMap() {
             // Actualiza el mapa con la nueva ubicación
             const newLat = parseFloat('{{ latest_data.latitude }}');
             const newLng = parseFloat('{{ latest_data.longitude }}');
             
             map.setCenter({ lat: newLat, lng: newLng });
-            map.markers[0].setPosition({ lat: newLat, lng: newLng });
+            marker.setPosition({ lat: newLat, lng: newLng });
         }
-    
+
         // Llamar a initMap cuando la página se carga
         document.addEventListener('DOMContentLoaded', function () {
             initMap();
             setInterval(updateMap, 2000); // Actualiza el mapa cada 2 segundos
         });
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDT0QJ4JVXUrTA8mRZN_YXjy2CZDsa_vmw"></script>
-
-    
 </head>
 <body>
     <div class="container">
@@ -123,7 +120,7 @@
 
             <div class="section">
                 <h2>Sensor Location</h2>
-                <div id="map" style="height: 500px; width: 100%;"></div>
+                <div id="map"></div>
 
                 <div class="data">
                     <div>
