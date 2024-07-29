@@ -72,16 +72,9 @@
             function initMap() {
                 const lat = parseFloat('{{ latest_data.latitude|default:"0" }}');
                 const lng = parseFloat('{{ latest_data.longitude|default:"0" }}');
-
-                // Verificar que el contenedor del mapa esté presente
-                const mapContainer = document.getElementById('map');
-                if (!mapContainer) {
-                    console.error("Contenedor del mapa no encontrado");
-                    return;
-                }
-
+                
                 // Crear un mapa en el contenedor con ID 'map'
-                map = new google.maps.Map(mapContainer, {
+                map = new google.maps.Map(document.getElementById('map'), {
                     center: { lat: lat, lng: lng },
                     zoom: 12
                 });
@@ -97,22 +90,16 @@
             function updateMap() {
                 const lat = parseFloat('{{ latest_data.latitude|default:"0" }}');
                 const lng = parseFloat('{{ latest_data.longitude|default:"0" }}');
-
-                if (map) {
-                    // Eliminar el marcador anterior si existe
-                    if (marker) {
-                        marker.setMap(null);
-                    }
-
-                    // Crear un nuevo marcador en la nueva ubicación
+                
+                if (marker) {
+                    // Actualiza el mapa con la nueva ubicación
+                    map.setCenter({ lat: lat, lng: lng });
+                    // Se debe crear un nuevo marcador para actualizar la posición
                     marker = new google.maps.marker.AdvancedMarkerElement({
                         position: { lat: lat, lng: lng },
                         map: map,
                         title: 'Sensor Location'
                     });
-
-                    // Actualizar el centro del mapa
-                    map.setCenter({ lat: lat, lng: lng });
                 }
             }
 
