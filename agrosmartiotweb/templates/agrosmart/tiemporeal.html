@@ -72,9 +72,16 @@
             function initMap() {
                 const lat = parseFloat('{{ latest_data.latitude|default:"0" }}');
                 const lng = parseFloat('{{ latest_data.longitude|default:"0" }}');
-                
+
+                // Verificar que el contenedor del mapa esté presente
+                const mapContainer = document.getElementById('map');
+                if (!mapContainer) {
+                    console.error("Contenedor del mapa no encontrado");
+                    return;
+                }
+
                 // Crear un mapa en el contenedor con ID 'map'
-                map = new google.maps.Map(document.getElementById('map'), {
+                map = new google.maps.Map(mapContainer, {
                     center: { lat: lat, lng: lng },
                     zoom: 12
                 });
@@ -90,15 +97,14 @@
             function updateMap() {
                 const lat = parseFloat('{{ latest_data.latitude|default:"0" }}');
                 const lng = parseFloat('{{ latest_data.longitude|default:"0" }}');
-                
-                if (marker) {
+
+                if (map && marker) {
                     // Actualiza el mapa con la nueva ubicación
                     map.setCenter({ lat: lat, lng: lng });
+                    
                     // Se debe crear un nuevo marcador para actualizar la posición
-                    marker = new google.maps.marker.AdvancedMarkerElement({
-                        position: { lat: lat, lng: lng },
-                        map: map,
-                        title: 'Sensor Location'
+                    marker.setOptions({
+                        position: { lat: lat, lng: lng }
                     });
                 }
             }
@@ -112,7 +118,7 @@
                 document.head.appendChild(script);
                 
                 // Actualiza el mapa cada 2 segundos
-                setInterval(updateMap, 2000);
+                setInterval(updateMap, 20000);
             });
         </script>
     </head>
