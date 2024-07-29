@@ -74,23 +74,26 @@
                 const lat = parseFloat('{{ latest_data.latitude|default:"0" }}');
                 const lng = parseFloat('{{ latest_data.longitude|default:"0" }}');
 
+                if (isNaN(lat) || isNaN(lng)) {
+                    console.error('Invalid latitude or longitude:', lat, lng);
+                    return;
+                }
+
                 const mapContainer = document.getElementById('map');
                 if (!mapContainer || mapContainer.clientHeight === 0 || mapContainer.clientWidth === 0) {
                     console.error("Contenedor del mapa no válido o no visible");
                     return;
                 }
 
-                // Load required libraries
                 const { Map } = await google.maps.importLibrary("maps");
                 const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
 
-                // Initialize the map
                 map = new Map(mapContainer, {
                     center: { lat: lat, lng: lng },
-                    zoom: 12
+                    zoom: 12,
+                    mapId: "DEMO_MAP_ID" // O eliminar esta línea si no usas un ID de mapa personalizado
                 });
 
-                // Initialize the marker
                 marker = new AdvancedMarkerElement({
                     map: map,
                     position: { lat: lat, lng: lng },
@@ -102,6 +105,11 @@
             async function updateMap() {
                 const lat = parseFloat('{{ latest_data.latitude|default:"0" }}');
                 const lng = parseFloat('{{ latest_data.longitude|default:"0" }}');
+
+                if (isNaN(lat) || isNaN(lng)) {
+                    console.error('Invalid latitude or longitude:', lat, lng);
+                    return;
+                }
 
                 if (map) {
                     if (marker) {
@@ -127,7 +135,7 @@
                 script.async = true;
                 document.head.appendChild(script);
 
-                setInterval(updateMap, 200000);
+                setInterval(updateMap, 2000);
             });
         </script>
     </head>
