@@ -92,9 +92,14 @@
                 const lng = parseFloat('{{ latest_data.longitude|default:"0" }}');
                 
                 if (marker) {
-                    // Actualiza el marcador y el centro del mapa con la nueva ubicación
-                    marker.setPosition({ lat: lat, lng: lng });
+                    // Actualiza el mapa con la nueva ubicación
                     map.setCenter({ lat: lat, lng: lng });
+                    // Se debe crear un nuevo marcador para actualizar la posición
+                    marker = new google.maps.marker.AdvancedMarkerElement({
+                        position: { lat: lat, lng: lng },
+                        map: map,
+                        title: 'Sensor Location'
+                    });
                 }
             }
 
@@ -102,8 +107,8 @@
                 // Cargar la API de Google Maps de manera asíncrona para un mejor rendimiento
                 const script = document.createElement('script');
                 script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDT0QJ4JVXUrTA8mRZN_YXjy2CZDsa_vmw&callback=initMap&libraries=maps,marker&v=beta";
-                script.defer = true; // Cambiado a defer
-                script.async = true; // Asegúrate de que sea asíncrono
+                script.defer = true;
+                script.async = true;
                 document.head.appendChild(script);
                 
                 // Actualiza el mapa cada 2 segundos
