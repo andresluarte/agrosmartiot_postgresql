@@ -580,7 +580,7 @@ def obtener_cobro_view(request):
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import TemperatureHumidityLocation
+
 from .serializers import TemperatureHumidityLocationSerializer
 
 class TemperatureHumidityAPIView(APIView):
