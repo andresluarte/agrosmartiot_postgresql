@@ -595,6 +595,7 @@ class TemperatureHumidityAPIView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+@csrf_exempt    
 def combined_data_view(request):
     # Obtener la última entrada
     latest_data = TemperatureHumidityLocation.objects.last()
