@@ -8,7 +8,7 @@
 <body>
     <h1>Soil Humidity Real-Time Data</h1>
     {% if latest_data %}
-        <p>Humidity: {{ latest_data.humidity }}%</p>
+        <p>Humidity: {{ latest_data.humiditysoil }}%</p>
         <p>Timestamp: {{ latest_data.timestamp }}</p>
     {% else %}
         <p>No data available.</p>
