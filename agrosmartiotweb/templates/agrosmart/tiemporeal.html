@@ -67,44 +67,46 @@
             }
         </style>
         <script>
+            let map, marker;
+
             function initMap() {
                 const lat = parseFloat('{{ latest_data.latitude|default:"0" }}');
                 const lng = parseFloat('{{ latest_data.longitude|default:"0" }}');
-    
+                
                 // Crear un mapa en el contenedor con ID 'map'
-                const map = new google.maps.Map(document.getElementById('map'), {
+                map = new google.maps.Map(document.getElementById('map'), {
                     center: { lat: lat, lng: lng },
                     zoom: 12
                 });
-    
-                // Crear un marcador en la ubicación del sensor usando AdvancedMarkerElement
-                new google.maps.marker.AdvancedMarkerElement({
+
+                // Crear un marcador en la ubicación del sensor
+                marker = new google.maps.Marker({
                     position: { lat: lat, lng: lng },
                     map: map,
                     title: 'Sensor Location'
                 });
             }
-    
+
             function updateMap() {
                 const lat = parseFloat('{{ latest_data.latitude|default:"0" }}');
                 const lng = parseFloat('{{ latest_data.longitude|default:"0" }}');
-    
-                // Actualiza el mapa con la nueva ubicación
-                const map = new google.maps.Map(document.getElementById('map'));
-                map.setCenter({ lat: lat, lng: lng });
-                const marker = new google.maps.marker.AdvancedMarkerElement({
-                    position: { lat: lat, lng: lng },
-                    map: map,
-                    title: 'Sensor Location'
-                });
+                
+                if (marker) {
+                    // Actualiza el marcador y el centro del mapa con la nueva ubicación
+                    marker.setPosition({ lat: lat, lng: lng });
+                    map.setCenter({ lat: lat, lng: lng });
+                }
             }
-    
+
             document.addEventListener('DOMContentLoaded', function () {
                 // Cargar la API de Google Maps de manera asíncrona para un mejor rendimiento
                 const script = document.createElement('script');
                 script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDT0QJ4JVXUrTA8mRZN_YXjy2CZDsa_vmw&callback=initMap&libraries=maps,marker&v=beta";
                 script.async = true;
                 document.head.appendChild(script);
+                
+                // Actualiza el mapa cada 2 segundos
+                setInterval(updateMap, 2000);
             });
         </script>
     </head>
