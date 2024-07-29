@@ -1,15 +1,21 @@
-<!-- En temperature_humidity_list.html -->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Temperature and Humidity Data</title>
+    <title>Temperature, Humidity, and Location Data</title>
 </head>
 <body>
-    <h1>Temperature and Humidity Data</h1>
-    <ul>
-        {% for entry in data %}
-            <li>Temperature: {{ entry.temperature }}, Humidity: {{ entry.humidity }}, Timestamp: {{ entry.timestamp }}</li>
-        {% endfor %}
-    </ul>
+    <h1>Temperature, Humidity, and Location Data</h1>
+    {% if latest_data %}
+        <p>Temperature: {{ latest_data.temperature }}°C</p>
+        <p>Humidity: {{ latest_data.humidity }}%</p>
+        <p>Latitude: {{ latest_data.latitude }}</p>
+        <p>Longitude: {{ latest_data.longitude }}</p>
+        <p>Timestamp: {{ latest_data.timestamp }}</p>
+        <p>
+            <a href="https://www.google.com/maps/search/?api=1&query={{ latest_data.latitude }},{{ latest_data.longitude }}" target="_blank">View on Google Maps</a>
+        </p>
+    {% else %}
+        <p>No data available.</p>
+    {% endif %}
 </body>
 </html>
