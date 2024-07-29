@@ -3,150 +3,152 @@
 {% block contenido %}
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Temperature, Humidity, and Location Data</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f4f4f4;
-        }
-        .container {
-            margin-top: 50px;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .section {
-            margin-bottom: 20px;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        .section h2 {
-            margin-bottom: 20px;
-            font-size: 28px;
-            color: #333;
-        }
-        .data {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            font-size: 24px;
-            font-weight: bold;
-        }
-        .data div {
-            margin: 10px;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            flex: 1 1 45%;
-        }
-        .timestamp {
-            margin-top: 20px;
-            font-size: 18px;
-            color: #555;
-        }
-        .map-link a {
-            text-decoration: none;
-            color: #007BFF;
-        }
-        .map-link a:hover {
-            text-decoration: underline;
-        }
-        @media (max-width: 600px) {
-            .data div {
-                flex: 1 1 100%;
+    <head>
+        <title>Temperature, Humidity, and Location Data</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                text-align: center;
+                background-color: #f4f4f4;
             }
-        }
-        #map {
-            height: 500px;
-            width: 100%;
-        }
-    </style>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDT0QJ4JVXUrTA8mRZN_YXjy2CZDsa_vmw"></script>
-    <script>
-        let map;
-        let marker;
-
-        function initMap() {
-            // Coordenadas iniciales
-            const lat = parseFloat('{{ latest_data.latitude|default:"0" }}');
-            const lng = parseFloat('{{ latest_data.longitude|default:"0" }}');
-
-            // Crear un mapa en el contenedor con ID 'map'
-            map = new google.maps.Map(document.getElementById('map'), {
-                center: { lat: lat, lng: lng },
-                zoom: 12
+            .container {
+                margin-top: 50px;
+                max-width: 800px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .section {
+                margin-bottom: 20px;
+                padding: 20px;
+                background-color: #fff;
+                border-radius: 10px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            }
+            .section h2 {
+                margin-bottom: 20px;
+                font-size: 28px;
+                color: #333;
+            }
+            .data {
+                display: flex;
+                justify-content: space-around;
+                flex-wrap: wrap;
+                font-size: 24px;
+                font-weight: bold;
+            }
+            .data div {
+                margin: 10px;
+                padding: 20px;
+                background-color: #fff;
+                border-radius: 10px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                flex: 1 1 45%;
+            }
+            .timestamp {
+                margin-top: 20px;
+                font-size: 18px;
+                color: #555;
+            }
+            .map-link a {
+                text-decoration: none;
+                color: #007BFF;
+            }
+            .map-link a:hover {
+                text-decoration: underline;
+            }
+            @media (max-width: 600px) {
+                .data div {
+                    flex: 1 1 100%;
+                }
+            }
+            #map {
+                height: 500px;
+                width: 100%;
+            }
+        </style>
+        <script>
+            function initMap() {
+                const lat = parseFloat('{{ latest_data.latitude|default:"0" }}');
+                const lng = parseFloat('{{ latest_data.longitude|default:"0" }}');
+    
+                // Crear un mapa en el contenedor con ID 'map'
+                const map = new google.maps.Map(document.getElementById('map'), {
+                    center: { lat: lat, lng: lng },
+                    zoom: 12
+                });
+    
+                // Crear un marcador en la ubicación del sensor usando AdvancedMarkerElement
+                new google.maps.marker.AdvancedMarkerElement({
+                    position: { lat: lat, lng: lng },
+                    map: map,
+                    title: 'Sensor Location'
+                });
+            }
+    
+            function updateMap() {
+                const lat = parseFloat('{{ latest_data.latitude|default:"0" }}');
+                const lng = parseFloat('{{ latest_data.longitude|default:"0" }}');
+    
+                // Actualiza el mapa con la nueva ubicación
+                const map = new google.maps.Map(document.getElementById('map'));
+                map.setCenter({ lat: lat, lng: lng });
+                const marker = new google.maps.marker.AdvancedMarkerElement({
+                    position: { lat: lat, lng: lng },
+                    map: map,
+                    title: 'Sensor Location'
+                });
+            }
+    
+            document.addEventListener('DOMContentLoaded', function () {
+                // Cargar la API de Google Maps de manera asíncrona para un mejor rendimiento
+                const script = document.createElement('script');
+                script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDT0QJ4JVXUrTA8mRZN_YXjy2CZDsa_vmw&callback=initMap&libraries=maps,marker&v=beta";
+                script.async = true;
+                document.head.appendChild(script);
             });
-
-            // Crear un marcador en la ubicación del sensor
-            marker = new google.maps.Marker({
-                position: { lat: lat, lng: lng },
-                map: map,
-                title: 'Sensor Location'
-            });
-        }
-
-        function updateMap() {
-            // Actualiza el mapa con la nueva ubicación
-            const newLat = parseFloat('{{ latest_data.latitude|default:"0" }}');
-            const newLng = parseFloat('{{ latest_data.longitude|default:"0" }}');
-            
-            map.setCenter({ lat: newLat, lng: newLng });
-            marker.setPosition({ lat: newLat, lng: newLng });
-        }
-
-        // Llamar a initMap cuando la página se carga
-        document.addEventListener('DOMContentLoaded', function () {
-            initMap();
-            setInterval(updateMap, 2000); // Actualiza el mapa cada 2 segundos
-        });
-    </script>
-</head>
-<body>
-    <div class="container">
-        <h1>Temperature, Humidity, and Location Data</h1>
-        {% if latest_data %}
-            <div class="section">
-                <h2>Temperature and Humidity</h2>
-                <div class="data">
-                    <div>
-                        <strong>Temperature:</strong> <span>{{ latest_data.temperature }}°C</span>
-                    </div>
-                    <div>
-                        <strong>Humidity:</strong> <span>{{ latest_data.humidity }}%</span>
+        </script>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Temperature, Humidity, and Location Data</h1>
+            {% if latest_data %}
+                <div class="section">
+                    <h2>Temperature and Humidity</h2>
+                    <div class="data">
+                        <div>
+                            <strong>Temperature:</strong> <span>{{ latest_data.temperature }}°C</span>
+                        </div>
+                        <div>
+                            <strong>Humidity:</strong> <span>{{ latest_data.humidity }}%</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="section">
-                <h2>Sensor Location</h2>
-                <div id="map"></div>
-
-                <div class="data">
-                    <div>
-                        <strong>Latitude:</strong> <span>{{ latest_data.latitude }}</span>
+    
+                <div class="section">
+                    <h2>Sensor Location</h2>
+                    <div id="map"></div>
+    
+                    <div class="data">
+                        <div>
+                            <strong>Latitude:</strong> <span>{{ latest_data.latitude }}</span>
+                        </div>
+                        <div>
+                            <strong>Longitude:</strong> <span>{{ latest_data.longitude }}</span>
+                        </div>
                     </div>
-                    <div>
-                        <strong>Longitude:</strong> <span>{{ latest_data.longitude }}</span>
+                    <div class="timestamp">
+                        Last updated: {{ latest_data.timestamp }}
+                    </div>
+                    <div class="map-link">
+                        <a href="https://www.google.com/maps/search/?api=1&query={{ latest_data.latitude|urlencode }},{{ latest_data.longitude|urlencode }}" target="_blank">
+                            View on Google Maps
+                        </a>
                     </div>
                 </div>
-                <div class="timestamp">
-                    Last updated: {{ latest_data.timestamp }}
-                </div>
-                <div class="map-link">
-                    <a href="https://www.google.com/maps/search/?api=1&query={{ latest_data.latitude|urlencode }},{{ latest_data.longitude|urlencode }}" target="_blank">
-                        View on Google Maps
-                    </a>
-                </div>
-            </div>
-        {% else %}
-            <p>No data available.</p>
-        {% endif %}
-    </div>
-</body>
+            {% else %}
+                <p>No data available.</p>
+            {% endif %}
+        </div>
+    </body>
 </html>
 {% endblock %}
