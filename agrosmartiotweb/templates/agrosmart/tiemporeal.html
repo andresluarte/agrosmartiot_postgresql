@@ -66,10 +66,10 @@
                 width: 100%;
             }
         </style>
-        <script>
+        <script type="module">
             let map, marker;
 
-            function initMap() {
+            async function initMap() {
                 console.log('initMap called');
                 const lat = parseFloat('{{ latest_data.latitude|default:"0" }}');
                 const lng = parseFloat('{{ latest_data.longitude|default:"0" }}');
@@ -80,20 +80,26 @@
                     return;
                 }
 
-                map = new google.maps.Map(mapContainer, {
+                // Load required libraries
+                const { Map } = await google.maps.importLibrary("maps");
+                const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+
+                // Initialize the map
+                map = new Map(mapContainer, {
                     center: { lat: lat, lng: lng },
                     zoom: 12
                 });
 
-                marker = new google.maps.Marker({
-                    position: { lat: lat, lng: lng },
+                // Initialize the marker
+                marker = new AdvancedMarkerElement({
                     map: map,
+                    position: { lat: lat, lng: lng },
                     title: 'Sensor Location'
                 });
                 console.log('Map and marker initialized');
             }
 
-            function updateMap() {
+            async function updateMap() {
                 const lat = parseFloat('{{ latest_data.latitude|default:"0" }}');
                 const lng = parseFloat('{{ latest_data.longitude|default:"0" }}');
 
@@ -102,9 +108,10 @@
                         marker.setMap(null);
                     }
 
-                    marker = new google.maps.Marker({
-                        position: { lat: lat, lng: lng },
+                    const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+                    marker = new AdvancedMarkerElement({
                         map: map,
+                        position: { lat: lat, lng: lng },
                         title: 'Sensor Location'
                     });
 
@@ -114,6 +121,7 @@
 
             document.addEventListener('DOMContentLoaded', function () {
                 const script = document.createElement('script');
+                script.type = 'module';
                 script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDT0QJ4JVXUrTA8mRZN_YXjy2CZDsa_vmw&callback=initMap&libraries=maps,marker&v=beta";
                 script.defer = true;
                 script.async = true;
