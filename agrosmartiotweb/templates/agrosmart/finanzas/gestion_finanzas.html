@@ -4,13 +4,115 @@
 {% load static %}
 {% load agrosmartiotweb %}
 
-<h1>Gestión de Finanzas</h1>
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+    th {
+        background-color: #f4f4f4;
+    }
+    @media (max-width: 768px) {
+        canvas {
+            height: 400px !important; /* Aumenta la altura en dispositivos móviles */
+        }
+    }
+</style>
 
-<h2>Total Gastos en Remuneración por Mes</h2>
-<canvas id="finanzasChart" height="300"></canvas>
+<div class="finanzas">
+    <h1>Gestión de Finanzas</h1>
 
-<h2>Gastos Financieros por Mes</h2>
-<canvas id="gastosChart" height="300"></canvas>
+    <div class="card">
+        <div class="card-body">
+            <h3>Gestión de Finanzas por Trabajador</h3>
+            <table class="table table-striped table-hover table-responsive" style="overflow-x: auto;">
+                <thead>
+                    <tr>
+                        <th>Nombre Trabajador</th>
+                        <th>Trabajo a Realizar</th>
+                        <th>Cobro por Hora</th>
+                        <th>Cantidad Jornadas</th>
+                        <th>Horas Trabajadas</th>
+                        <th>Total a Pagar</th>
+                        <th>Estado de Pago</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for finanza in finanzas %}
+                    <tr>
+                        <td>{{ finanza.trabajador.nombre }}</td>
+                        <td>{{ finanza.trabajo_realiza }}</td>
+                        <td>{{ finanza.cobro_por_hora }}</td>
+                        <td>{{ finanza.cantidad_jornadas }}</td>
+                        <td>{{ finanza.horas_trabajadas }}</td>
+                        <td>{{ finanza.total_a_pagar }}</td>
+                        <td>{{ finanza.get_estado_pago_display }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <br>
+
+    <div class="card">
+        <div class="card-body">
+            <h3>Gestión de Finanzas por Mes</h3>
+            <table class="table table-striped table-hover table-responsive" style="overflow-x: auto;">
+                <thead>
+                    <tr>
+                        <th>Mes</th>
+                        <th>Gastos en Remuneración</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for finanza_por_mes in finanzas_por_mes %}
+                    <tr>
+                        <td>{{ finanza_por_mes.mes }}</td>
+                        <td>{{ finanza_por_mes.total_gastos_en_remuneracion }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <h2>Total Gastos en Remuneración por Mes</h2>
+            <canvas id="finanzasChart" height="300"></canvas>
+        </div>
+    </div>
+
+    <br>
+
+    <div class="card">
+        <div class="card-body">
+            <h3>Gastos Financieros</h3>
+            <table class="table table-striped table-hover table-responsive" style="overflow-x: auto;">
+                <thead>
+                    <tr>
+                        <th>Mes</th>
+                        <th>Gastos Financieros</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for gasto in gastos_por_mes %}
+                    <tr>
+                        <td>{{ gasto.mes }}</td>
+                        <td>{{ gasto.total|floatformat:2 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <h2>Gastos Financieros por Mes</h2>
+            <canvas id="gastosChart" height="300"></canvas>
+        </div>
+    </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
@@ -28,15 +130,13 @@
             type: 'bar',
             data: {
                 labels: finanzasLabels,
-                datasets: [
-                    {
-                        label: 'Total Gastos en Remuneración',
-                        data: finanzasTotalGastos,
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 1
-                    }
-                ]
+                datasets: [{
+                    label: 'Total Gastos en Remuneración',
+                    data: finanzasTotalGastos,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
             },
             options: {
                 maintainAspectRatio: false,
@@ -53,15 +153,13 @@
             type: 'bar',
             data: {
                 labels: gastosLabels,
-                datasets: [
-                    {
-                        label: 'Gastos Financieros',
-                        data: gastosTotal,
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1
-                    }
-                ]
+                datasets: [{
+                    label: 'Gastos Financieros',
+                    data: gastosTotal,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
             },
             options: {
                 maintainAspectRatio: false,

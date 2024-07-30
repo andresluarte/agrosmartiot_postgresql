@@ -691,11 +691,12 @@ def FinanzasList(request):
 
     context = {
         'finanzas_data': json.dumps(finanzas_data),
-        'gastos_data': json.dumps(gastos_data)
+        'gastos_data': json.dumps(gastos_data),
+        'finanzas_por_mes': finanzas,
+        'gastos_por_mes': gastos_por_mes,
     }
 
     return render(request, 'agrosmart/finanzas/gestion_finanzas.html', context)
-
 ###gasto financiero 
 def agregar_gasto_financiero(request):
     if request.method == 'POST':
