@@ -4,104 +4,75 @@
 {% load static %}
 {% load agrosmartiotweb %}
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Finanzas</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f4f4f4;
-        }
-        @media (max-width: 768px) {
-            canvas {
-                height: 400px !important; /* Aumenta la altura en dispositivos móviles */
+<h1>Gestión de Finanzas</h1>
+
+<h2>Total Gastos en Remuneración por Mes</h2>
+<canvas id="finanzasChart" height="300"></canvas>
+
+<h2>Gastos Financieros por Mes</h2>
+<canvas id="gastosChart" height="300"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const finanzasData = JSON.parse('{{ finanzas_data|escapejs }}');
+        const gastosData = JSON.parse('{{ gastos_data|escapejs }}');
+
+        const finanzasLabels = finanzasData.map(entry => entry.mes);
+        const finanzasTotalGastos = finanzasData.map(entry => entry.total_gastos);
+
+        const gastosLabels = gastosData.map(entry => entry.mes);
+        const gastosTotal = gastosData.map(entry => entry.total);
+
+        const finanzasChart = new Chart(document.getElementById('finanzasChart'), {
+            type: 'bar',
+            data: {
+                labels: finanzasLabels,
+                datasets: [
+                    {
+                        label: 'Total Gastos en Remuneración',
+                        data: finanzasTotalGastos,
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                maintainAspectRatio: false,
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
             }
-        }
-    </style>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
-    <h1>Gestión de Finanzas</h1>
-    
-    <h2>Total Gastos en Remuneración por Mes</h2>
-    <canvas id="finanzasChart" height="300"></canvas>
-    
-    <h2>Gastos Financieros por Mes</h2>
-    <canvas id="gastosChart" height="300"></canvas>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const finanzasData = JSON.parse('{{ finanzas_data|escapejs }}');
-            const gastosData = JSON.parse('{{ gastos_data|escapejs }}');
-
-            const finanzasLabels = finanzasData.map(entry => entry.mes);
-            const finanzasTotalGastos = finanzasData.map(entry => entry.total_gastos);
-
-            const gastosLabels = gastosData.map(entry => entry.mes);
-            const gastosTotal = gastosData.map(entry => entry.total);
-
-            const finanzasChart = new Chart(document.getElementById('finanzasChart'), {
-                type: 'bar',
-                data: {
-                    labels: finanzasLabels,
-                    datasets: [
-                        {
-                            label: 'Total Gastos en Remuneración',
-                            data: finanzasTotalGastos,
-                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                            borderColor: 'rgba(255, 99, 132, 1)',
-                            borderWidth: 1
-                        }
-                    ]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-
-            const gastosChart = new Chart(document.getElementById('gastosChart'), {
-                type: 'bar',
-                data: {
-                    labels: gastosLabels,
-                    datasets: [
-                        {
-                            label: 'Gastos Financieros',
-                            data: gastosTotal,
-                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                            borderColor: 'rgba(54, 162, 235, 1)',
-                            borderWidth: 1
-                        }
-                    ]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
         });
-    </script>
-</body>
-</html>
+
+        const gastosChart = new Chart(document.getElementById('gastosChart'), {
+            type: 'bar',
+            data: {
+                labels: gastosLabels,
+                datasets: [
+                    {
+                        label: 'Gastos Financieros',
+                        data: gastosTotal,
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                maintainAspectRatio: false,
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+</script>
 {% endblock %}
