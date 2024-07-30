@@ -21,6 +21,11 @@
         th {
             background-color: #f4f4f4;
         }
+        @media (max-width: 768px) {
+            #tempHumidityChart, #soilHumidityChart {
+                height: 400px; /* Aumenta la altura en dispositivos móviles */
+            }
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -28,10 +33,10 @@
     <h1>Informes de Datos</h1>
     
     <h2>Temperatura y Humedad</h2>
-    <canvas id="tempHumidityChart"></canvas>
-
+    <canvas id="tempHumidityChart" height="200"></canvas> <!-- Altura predeterminada -->
+    
     <h2>Humedad del Suelo</h2>
-    <canvas id="soilHumidityChart"></canvas>
+    <canvas id="soilHumidityChart" height="200"></canvas> <!-- Altura predeterminada -->
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -65,6 +70,18 @@
                             fill: true
                         }
                     ]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    scales: {
+                        x: {
+                            ticks: {
+                                maxRotation: 90,
+                                minRotation: 45
+                            }
+                        }
+                    }
                 }
             });
 
@@ -81,10 +98,15 @@
                             fill: true
                         }
                     ]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    responsive: true
                 }
             });
         });
     </script>
 </body>
 </html>
+
 {% endblock %}
