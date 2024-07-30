@@ -693,6 +693,7 @@ def FinanzasList(request):
     return render(request, 'agrosmart/finanzas/gestion_finanzas.html', context)
 
 
+
 ###gasto financiero 
 def agregar_gasto_financiero(request):
     if request.method == 'POST':
