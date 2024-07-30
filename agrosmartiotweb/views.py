@@ -665,14 +665,14 @@ def user_logout(request):
     auth.logout(request)
     return redirect ("home")
 
-def FinanzasList(request):
-    finanzas = Finanzas.objects.all()
-    finanzas_por_mes = FinanzasPorMes.objects.all()
-    gastos_por_mes = GastoFinanciero.objects.gastos_por_mes()
+# def FinanzasList(request):
+#     finanzas = Finanzas.objects.all()
+#     finanzas_por_mes = FinanzasPorMes.objects.all()
+#     gastos_por_mes = GastoFinanciero.objects.gastos_por_mes()
     
-    return render(request, 'agrosmart/finanzas/gestion_finanzas.html', {'finanzas': finanzas,'finanzas_por_mes': finanzas_por_mes,'gastos_por_mes':gastos_por_mes})
+#     return render(request, 'agrosmart/finanzas/gestion_finanzas.html', {'finanzas': finanzas,'finanzas_por_mes': finanzas_por_mes,'gastos_por_mes':gastos_por_mes})
 
-def FinanzasList2(request):
+def FinanzasList(request):
     finanzas_por_mes = FinanzasPorMes.objects.all()
 
     # Preparar datos para el gráfico
