@@ -734,16 +734,4 @@ def informes(request):
         'soil_data': json.dumps(soil_data)
     }
     
-    return render(request, 'informes.html', context)
-        {
-            'hour': entry['hour'].strftime('%Y-%m-%d %H:%M:%S'),
-            'avg_humidity_soil': round(entry['avg_humidity_soil'], 2),
-        } for entry in soil_data
-    ]
-
-    context = {
-        'temp_humidity_data': json.dumps(temp_humidity_data),
-        'soil_data': json.dumps(soil_data),
-    }
-    
     return render(request, 'agrosmart/informes.html', context)
