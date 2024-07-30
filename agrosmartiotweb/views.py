@@ -665,17 +665,17 @@ def user_logout(request):
     auth.logout(request)
     return redirect ("home")
 
-from django.shortcuts import render
-from .models import Finanzas, FinanzasPorMes, GastoFinanciero
-from django.db.models import Sum
-import json
-
 def FinanzasList(request):
     finanzas = Finanzas.objects.all()
     finanzas_por_mes = FinanzasPorMes.objects.all()
     gastos_por_mes = GastoFinanciero.objects.gastos_por_mes()
+    
+    return render(request, 'agrosmart/finanzas/gestion_finanzas.html', {'finanzas': finanzas,'finanzas_por_mes': finanzas_por_mes,'gastos_por_mes':gastos_por_mes})
 
-    # Preparar datos para el gráfico de "Gastos en Remuneración por Mes"
+def FinanzasList2(request):
+    finanzas_por_mes = FinanzasPorMes.objects.all()
+
+    # Preparar datos para el gráfico
     finanzas_data = [
         {
             'mes': entry.mes,
@@ -684,16 +684,10 @@ def FinanzasList(request):
     ]
 
     context = {
-        'finanzas': finanzas,
-        'finanzas_por_mes': finanzas_por_mes,
-        'gastos_por_mes': gastos_por_mes,
-        'finanzas_data': json.dumps(finanzas_data)
+        'finanzas_data': json.dumps(finanzas_data),
     }
 
     return render(request, 'agrosmart/finanzas/gestion_finanzas.html', context)
-
-
-
 ###gasto financiero 
 def agregar_gasto_financiero(request):
     if request.method == 'POST':
