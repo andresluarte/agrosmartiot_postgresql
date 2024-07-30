@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    
+    <title>Datos Sensor</title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <style>
         body {
@@ -70,10 +70,10 @@
 </head>
 <body>
     <div class="container">
-        <h3>Datos Sensor Aire </h3>
+        
         {% if latest_data %}
             <div class="section">
-                <h3>Temperature and Humidity</h3>
+                <h3>Temperatura y Humedad</h3>
                 <div class="data">
                     <div>
                         <strong>Temperature:</strong> <span>{{ latest_data.temperature }}°C</span>
