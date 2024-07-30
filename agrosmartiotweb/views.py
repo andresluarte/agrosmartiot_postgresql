@@ -694,6 +694,8 @@ from django.db.models import Count, FloatField, Value
 from django.db.models.functions import TruncHour, Cast
   # Asegúrate de tener el modelo Ubicaciones
 
+import json
+
 def informes(request):
     # Promedio por hora para TemperatureHumidityLocation
     temp_humidity_data = (
@@ -715,20 +717,11 @@ def informes(request):
         .annotate(avg_humidity_soil=Avg('humiditysoil'))
         .order_by('hour')
     )
-    
-    # Ubicaciones Recopiladas
-    ubicaciones_data = (
-        TemperatureHumidityLocation.objects
-        .annotate(hour=TruncHour('timestamp'))
-        .values('hour', 'latitude', 'longitude')
-        .annotate(count=Count('id'))
-        .order_by('hour', '-count')
-    )
 
     # Redondear los valores
     temp_humidity_data = [
         {
-            **entry,
+            'hour': entry['hour'].strftime('%Y-%m-%d %H:%M:%S'),
             'avg_temp': round(entry['avg_temp'], 2),
             'avg_humidity': round(entry['avg_humidity'], 2),
         } for entry in temp_humidity_data
@@ -736,15 +729,14 @@ def informes(request):
     
     soil_data = [
         {
-            **entry,
+            'hour': entry['hour'].strftime('%Y-%m-%d %H:%M:%S'),
             'avg_humidity_soil': round(entry['avg_humidity_soil'], 2),
         } for entry in soil_data
     ]
 
     context = {
-        'temp_humidity_data': temp_humidity_data,
-        'soil_data': soil_data,
-        'ubicaciones_data': ubicaciones_data,
+        'temp_humidity_data': json.dumps(temp_humidity_data),
+        'soil_data': json.dumps(soil_data),
     }
     
-    return render(request, 'agrosmart/informes.html', context)
+    return render(request, 'informes.html', context)
