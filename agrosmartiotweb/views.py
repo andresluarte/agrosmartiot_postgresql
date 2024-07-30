@@ -739,4 +739,4 @@ def informes(request):
         'soil_data': json.dumps(soil_data),
     }
     
-    return render(request, 'informes.html', context)
+    return render(request, 'agrosmart/informes.html', context)
