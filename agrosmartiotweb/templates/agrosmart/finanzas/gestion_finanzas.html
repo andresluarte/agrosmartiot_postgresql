@@ -100,3 +100,42 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const finanzasData = JSON.parse('{{ finanzas_data|escapejs }}');
+
+        const finanzasLabels = finanzasData.map(entry => entry.mes);
+        const finanzasTotalGastos = finanzasData.map(entry => entry.total_gastos);
+
+        const finanzasChart = new Chart(document.getElementById('finanzasChart'), {
+            type: 'bar',
+            data: {
+                labels: finanzasLabels,
+                datasets: [{
+                    label: 'Total Gastos en Remuneración',
+                    data: finanzasTotalGastos,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 10000000, // Ajusta el intervalo del eje Y
+                            callback: function(value) {
+                                return value.toLocaleString(); // Formatear números con comas
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}
