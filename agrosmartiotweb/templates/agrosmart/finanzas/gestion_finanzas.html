@@ -120,19 +120,19 @@
         const finanzasData = JSON.parse('{{ finanzas_data|escapejs }}');
         const gastosData = JSON.parse('{{ gastos_data|escapejs }}');
 
-        const finanzasLabels = finanzasData.map(entry => entry.mes);
-        const finanzasTotalGastos = finanzasData.map(entry => entry.total_gastos);
+        const finanzasLabels = finanzasData.map(entry => entry.rango);
+        const finanzasPromedioGastos = finanzasData.map(entry => entry.promedio_gastos);
 
-        const gastosLabels = gastosData.map(entry => entry.mes);
-        const gastosTotal = gastosData.map(entry => entry.total);
+        const gastosLabels = gastosData.map(entry => entry.rango);
+        const gastosPromedioGastos = gastosData.map(entry => entry.promedio_gastos);
 
         const finanzasChart = new Chart(document.getElementById('finanzasChart'), {
             type: 'bar',
             data: {
                 labels: finanzasLabels,
                 datasets: [{
-                    label: 'Total Gastos en Remuneración',
-                    data: finanzasTotalGastos,
+                    label: 'Promedio Gastos en Remuneración',
+                    data: finanzasPromedioGastos,
                     backgroundColor: 'rgba(255, 99, 132, 0.2)',
                     borderColor: 'rgba(255, 99, 132, 1)',
                     borderWidth: 1
@@ -154,8 +154,8 @@
             data: {
                 labels: gastosLabels,
                 datasets: [{
-                    label: 'Gastos Financieros',
-                    data: gastosTotal,
+                    label: 'Promedio Gastos Financieros',
+                    data: gastosPromedioGastos,
                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
                     borderColor: 'rgba(54, 162, 235, 1)',
                     borderWidth: 1
@@ -171,6 +171,4 @@
                 }
             }
         });
-    });
-</script>
-{% endblock %}
+   
