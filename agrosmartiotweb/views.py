@@ -665,70 +665,12 @@ def user_logout(request):
     auth.logout(request)
     return redirect ("home")
 
-from django.shortcuts import render
-from .models import FinanzasPorMes, GastoFinanciero
-from django.db.models import Sum, F, FloatField
-from django.db.models.functions import TruncMonth
-import json
-
 def FinanzasList(request):
-    finanzas = FinanzasPorMes.objects.all()
+    finanzas = Finanzas.objects.all()
+    finanzas_por_mes = FinanzasPorMes.objects.all()
     gastos_por_mes = GastoFinanciero.objects.gastos_por_mes()
-
-    # Agrupar datos en rangos y calcular promedios
-    rango_labels = ["0-10M", "10M-20M", "20M-30M", "30M-40M", "40M-50M"]
-    finanzas_rangos = {label: [] for label in rango_labels}
-    gastos_rangos = {label: [] for label in rango_labels}
-
-    for entry in finanzas:
-        total_gastos = float(entry.total_gastos_en_remuneracion)
-        if total_gastos < 10_000_000:
-            finanzas_rangos["0-10M"].append(total_gastos)
-        elif total_gastos < 20_000_000:
-            finanzas_rangos["10M-20M"].append(total_gastos)
-        elif total_gastos < 30_000_000:
-            finanzas_rangos["20M-30M"].append(total_gastos)
-        elif total_gastos < 40_000_000:
-            finanzas_rangos["30M-40M"].append(total_gastos)
-        else:
-            finanzas_rangos["40M-50M"].append(total_gastos)
-
-    for entry in gastos_por_mes:
-        total_gastos = float(entry['total'])
-        if total_gastos < 10_000_000:
-            gastos_rangos["0-10M"].append(total_gastos)
-        elif total_gastos < 20_000_000:
-            gastos_rangos["10M-20M"].append(total_gastos)
-        elif total_gastos < 30_000_000:
-            gastos_rangos["20M-30M"].append(total_gastos)
-        elif total_gastos < 40_000_000:
-            gastos_rangos["30M-40M"].append(total_gastos)
-        else:
-            gastos_rangos["40M-50M"].append(total_gastos)
-
-    # Calcular promedios
-    finanzas_data = [
-        {
-            'rango': rango,
-            'promedio_gastos': round(sum(finanzas_rangos[rango]) / len(finanzas_rangos[rango]), 2) if finanzas_rangos[rango] else 0
-        } for rango in rango_labels
-    ]
-
-    gastos_data = [
-        {
-            'rango': rango,
-            'promedio_gastos': round(sum(gastos_rangos[rango]) / len(gastos_rangos[rango]), 2) if gastos_rangos[rango] else 0
-        } for rango in rango_labels
-    ]
-
-    context = {
-        'finanzas_data': json.dumps(finanzas_data),
-        'gastos_data': json.dumps(gastos_data),
-        'finanzas_por_mes': finanzas,
-        'gastos_por_mes': gastos_por_mes,
-    }
-
-    return render(request, 'agrosmart/finanzas/gestion_finanzas.html', context)
+    
+    return render(request, 'agrosmart/finanzas/gestion_finanzas.html', {'finanzas': finanzas,'finanzas_por_mes': finanzas_por_mes,'gastos_por_mes':gastos_por_mes})
 
 ###gasto financiero 
 def agregar_gasto_financiero(request):
