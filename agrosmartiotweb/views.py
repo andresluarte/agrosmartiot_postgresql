@@ -693,41 +693,48 @@ from django.shortcuts import render
 from django.db.models import Count, FloatField, Value
 from django.db.models.functions import TruncHour, Cast
   # Asegúrate de tener el modelo Ubicaciones
-
+from datetime import datetime, time
 import json
 
 def informes(request):
-    # Promedio por hora para TemperatureHumidityLocation
-    temp_humidity_data = (
-        TemperatureHumidityLocation.objects
-        .annotate(hour=TruncHour('timestamp'))
-        .values('hour')
-        .annotate(
-            avg_temp=Avg('temperature'),
-            avg_humidity=Avg('humidity')
-        )
-        .order_by('hour')
-    )
-    
-    # Promedio por hora para HumiditySoil
-    soil_data = (
-        HumiditySoil.objects
-        .annotate(hour=TruncHour('timestamp'))
-        .values('hour')
-        .annotate(avg_humidity_soil=Avg('humiditysoil'))
-        .order_by('hour')
-    )
+    temp_humidity_data = TemperatureHumidityLocation.objects.filter(
+        timestamp__hour__in=[0, 8, 16]
+    ).values(
+        'timestamp__date', 'timestamp__hour'
+    ).annotate(
+        avg_temp=Avg('temperature'),
+        avg_humidity=Avg('humidity')
+    ).order_by('timestamp__date', 'timestamp__hour')
 
-    # Redondear los valores
+    soil_data = HumiditySoil.objects.filter(
+        timestamp__hour__in=[0, 8, 16]
+    ).values(
+        'timestamp__date', 'timestamp__hour'
+    ).annotate(
+        avg_humidity_soil=Avg('humiditysoil')
+    ).order_by('timestamp__date', 'timestamp__hour')
+
     temp_humidity_data = [
         {
-            'hour': entry['hour'].strftime('%Y-%m-%d %H:%M:%S'),
+            'hour': datetime.combine(entry['timestamp__date'], time(entry['timestamp__hour'])).strftime('%Y-%m-%d %H:%M:%S'),
             'avg_temp': round(entry['avg_temp'], 2),
             'avg_humidity': round(entry['avg_humidity'], 2),
         } for entry in temp_humidity_data
     ]
-    
+
     soil_data = [
+        {
+            'hour': datetime.combine(entry['timestamp__date'], time(entry['timestamp__hour'])).strftime('%Y-%m-%d %H:%M:%S'),
+            'avg_humidity_soil': round(entry['avg_humidity_soil'], 2),
+        } for entry in soil_data
+    ]
+
+    context = {
+        'temp_humidity_data': json.dumps(temp_humidity_data),
+        'soil_data': json.dumps(soil_data)
+    }
+    
+    return render(request, 'informes.html', context)
         {
             'hour': entry['hour'].strftime('%Y-%m-%d %H:%M:%S'),
             'avg_humidity_soil': round(entry['avg_humidity_soil'], 2),
