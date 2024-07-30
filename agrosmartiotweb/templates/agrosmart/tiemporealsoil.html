@@ -71,15 +71,16 @@
 </head>
 <body>
     <div class="container">
-       
+        <h3>Datos Sensor 2  </h3>
         {% if latest_data %}
             <div class="section">
-                <h2>Humedad Suelo</h2>
+                <h3>Humedad Suelo</h3>
                 <div class="data">
                     
                     <div>
-                        <strong>Humedad del Suelo:</strong> <span>{{ latest_data.humiditysoil }}%</span>
-                        <strong>Ultima Recopilación de datos:</strong> <span>{{ latest_data.timestamp }}</span>
+                        <strong>Humedad :</strong> <span>{{ latest_data.humiditysoil }}%</span>
+
+                        <strong>Ultimos Datos:</strong> <span>{{ latest_data.timestamp }}</span>
                     </div>
                 </div>
             </div>
