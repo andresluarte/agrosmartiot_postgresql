@@ -22,8 +22,8 @@
             background-color: #f4f4f4;
         }
         @media (max-width: 768px) {
-            #tempHumidityChart, #soilHumidityChart {
-                height: 400px; /* Aumenta la altura en dispositivos móviles */
+            canvas {
+                height: 400px !important; /* Aumenta la altura en dispositivos móviles */
             }
         }
     </style>
@@ -33,10 +33,10 @@
     <h1>Informes de Datos</h1>
     
     <h2>Temperatura y Humedad</h2>
-    <canvas id="tempHumidityChart" height="200"></canvas> <!-- Altura predeterminada -->
+    <canvas id="tempHumidityChart" height="300"></canvas> <!-- Altura predeterminada -->
     
     <h2>Humedad del Suelo</h2>
-    <canvas id="soilHumidityChart" height="200"></canvas> <!-- Altura predeterminada -->
+    <canvas id="soilHumidityChart" height="300"></canvas> <!-- Altura predeterminada -->
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
