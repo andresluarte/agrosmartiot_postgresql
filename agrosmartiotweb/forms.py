@@ -222,7 +222,8 @@ from .models import Sector, Huerto, Lote
 class SectorForm(forms.ModelForm):
     class Meta:
         model = Sector
-        fields = ['nombre','latitud','longitud']
+        fields = ['nombre', 'latitud', 'longitud', 'google_maps_link']
+
 
 class HuertoForm(forms.ModelForm):
     class Meta:
@@ -234,26 +235,11 @@ class LoteForm(forms.ModelForm):
         model = Lote
         fields = ['nombre', 'huerto']
 
-class SectorForm(forms.ModelForm):
-    google_maps_link = forms.URLField(
-        max_length=200, 
-        required=False,
-        label="Enlace de Google Maps (opcional)"
-    )
-
+class SectorModificarForm(forms.ModelForm):
+    
     class Meta:
         model = Sector
-        fields = ['nombre', 'latitud', 'longitud', 'google_maps_link']
-
-    def clean(self):
-        cleaned_data = super().clean()
-        lat = cleaned_data.get("latitud")
-        lng = cleaned_data.get("longitud")
-        link = cleaned_data.get("google_maps_link")
-
-        if not link and (not lat or not lng):
-            raise forms.ValidationError("Debes proporcionar coordenadas o un enlace de Google Maps.")
-        
+        fields = ['nombre','latitud','longitud']
 class HuertoModificarForm(forms.ModelForm):
     class Meta:
         model = Huerto
