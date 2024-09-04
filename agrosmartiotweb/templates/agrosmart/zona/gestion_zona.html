@@ -85,6 +85,7 @@
     <div class="card-body">
       
       <h3> Visualización de Sectores, Huertos y Lotes </h3>
+      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDT0QJ4JVXUrTA8mRZN_YXjy2CZDsa_vmw"></script>
       <hr>
       <td>
         <head>
@@ -169,6 +170,46 @@
         </head>
         <body>
           <div id="map"></div>
+          <script>
+            function initMap() {
+                // Crear un mapa vacío
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 12,
+                    center: { lat: -33.4489, lng: -70.6693 } // Coordenadas de Santiago, Chile como centro inicial
+                });
+    
+                // Array para almacenar las ventanas de información
+                var infoWindowArray = [];
+    
+                {% for sector in sectores %}
+                var lat = parseFloat('{{ sector.latitud|escapejs }}');
+                var lng = parseFloat('{{ sector.longitud|escapejs }}');
+                var marker = new google.maps.Marker({
+                    position: { lat: lat, lng: lng },
+                    map: map,
+                    title: '{{ sector.nombre }}'
+                });
+    
+                var infowindow = new google.maps.InfoWindow({
+                    content: '<div><strong>{{ sector.nombre }}</strong></div>'
+                });
+    
+                // Añadir el marcador al array de ventanas de información
+                infoWindowArray.push(infowindow);
+    
+                // Añadir un listener para mostrar la ventana de información al hacer clic en el marcador
+                marker.addListener('click', function() {
+                    infoWindowArray.forEach(function(iw) {
+                        iw.close();
+                    });
+                    infowindow.open(map, marker);
+                });
+                {% endfor %}
+            }
+    
+            // Inicializar el mapa cuando la página esté completamente cargada
+            window.onload = initMap;
+        </script>
           <ul>
             <li class="nivel sector">SECTOR:</li>
             {% for sector in sectores %}
@@ -194,51 +235,7 @@
                       
                   </li>
                   
-                  <script>
-                    function initMap() {
-                      {% for sector in sectores %}
-                      var lat = parseFloat('{{ sector.latitud|escapejs }}');
-                      var lng = parseFloat('{{ sector.longitud|escapejs }}');
-                        var map = new google.maps.Map(document.getElementById('map'), {
-                            zoom: 12,
-                            center: { lat: lat, lng: lng } // Ubicación inicial, por ejemplo, Santiago, Chile
-                        });
-            
-                        var infoWindowArray = [];
-            
-                        
-                        
-                        var lat = parseFloat('{{ sector.latitud|escapejs }}');
-                        var lng = parseFloat('{{ sector.longitud|escapejs }}');
-                        var marker = new google.maps.Marker({
-                          position: { lat: lat, lng: lng },
-                            map: map,
-                            title: '{{ sector.nombre }}'
-                        });
-            
-                        var infowindow = new google.maps.InfoWindow({
-                            content: '<div><strong>{{ sector.nombre }}</strong></div>'
-                        });
-            
-                        infoWindowArray.push(infowindow);
-            
-                        marker.addListener('click', function() {
-                            infoWindowArray.forEach(function(iw) {
-                                iw.close();
-                            });
-                            infowindow.open(map, marker);
-                        });
-                        {% endfor %}
-                    }
-            
-                    window.addEventListener('load', () => {
-                        const script = document.createElement('script');
-                        script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDT0QJ4JVXUrTA8mRZN_YXjy2CZDsa_vmw&callback=initMap";
-                        
-                        script.defer = true;
-                        document.head.appendChild(script);
-                    });
-                </script>
+                  
                   <ul>
                       <li class="nivel huerto ">HUERTO:</li>
                       {% for huerto in sector.huerto_set.all %}
