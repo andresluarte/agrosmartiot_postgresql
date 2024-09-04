@@ -237,49 +237,51 @@
                 </div>
             {% endfor %}
         </ul>
-        <script>
+        <<script>
           function initMap() {
-              
-              var map = new google.maps.Map(document.getElementById('map'), {
-                  zoom: 12,
-                  center: { lat: -33.4489, lng: -70.6693 } // Ubicación inicial, por ejemplo, Santiago, Chile
+            var map = new google.maps.Map(document.getElementById('map'), {
+              zoom: 12,
+              center: { lat: -33.4489, lng: -70.6693 } // Ubicación inicial, por ejemplo, Santiago, Chile
+            });
+        
+            var infoWindowArray = [];
+        
+            {% for sector in sectores %}
+            
+            // Convertir coordenadas de comas a puntos
+            var lat = '{{ sector.latitud }}'.replace(',', '.');
+            var lng = '{{ sector.longitud }}'.replace(',', '.');
+            
+            var marker = new google.maps.Marker({
+              position: { lat: parseFloat(lat), lng: parseFloat(lng) },
+              map: map,
+              title: '{{ sector.nombre }}'
+            });
+        
+            var infowindow = new google.maps.InfoWindow({
+              content: '<div><strong>{{ sector.nombre }}</strong></div>'
+            });
+        
+            infoWindowArray.push(infowindow);
+        
+            marker.addListener('click', function() {
+              infoWindowArray.forEach(function(iw) {
+                iw.close();
               });
-  
-              var infoWindowArray = [];
-  
-              {% for sector in sectores %}
-              
-             
-              var marker = new google.maps.Marker({
-                  position: { lat: {{ sector.latitud }}, lng: {{ sector.longitud }} },
-                  map: map,
-                  title: '{{ sector.nombre }}'
-              });
-  
-              var infowindow = new google.maps.InfoWindow({
-                  content: '<div><strong>{{ sector.nombre }}</strong></div>'
-              });
-  
-              infoWindowArray.push(infowindow);
-  
-              marker.addListener('click', function() {
-                  infoWindowArray.forEach(function(iw) {
-                      iw.close();
-                  });
-                  infowindow.open(map, marker);
-              });
-              {% endfor %}
+              infowindow.open(map, marker);
+            });
+            {% endfor %}
           }
-  
+        
           window.addEventListener('load', () => {
-              const script = document.createElement('script');
-              script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDT0QJ4JVXUrTA8mRZN_YXjy2CZDsa_vmw&callback=initMap";
-              
-              script.defer = true;
-              document.head.appendChild(script);
+            const script = document.createElement('script');
+            script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDT0QJ4JVXUrTA8mRZN_YXjy2CZDsa_vmw&callback=initMap";
+            script.defer = true;
+            document.head.appendChild(script);
           });
-      </script>
-      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDT0QJ4JVXUrTA8mRZN_YXjy2CZDsa_vmw&callback=initMap&libraries=places" async defer></script>
+        </script>
+        
+      
             
         </body>
         
