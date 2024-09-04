@@ -222,7 +222,7 @@ from .models import Sector, Huerto, Lote
 class SectorForm(forms.ModelForm):
     class Meta:
         model = Sector
-        fields = ['nombre']
+        fields = ['nombre','latitud','longitud']
 
 class HuertoForm(forms.ModelForm):
     class Meta:
