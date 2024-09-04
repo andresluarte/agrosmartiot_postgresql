@@ -239,6 +239,7 @@
         </ul>
         <script>
           function initMap() {
+              
               var map = new google.maps.Map(document.getElementById('map'), {
                   zoom: 12,
                   center: { lat: -33.4489, lng: -70.6693 } // Ubicación inicial, por ejemplo, Santiago, Chile
@@ -247,6 +248,9 @@
               var infoWindowArray = [];
   
               {% for sector in sectores %}
+              
+              var latitud = parseFloat(lat);
+              var longitud = parseFloat(lng);
               var marker = new google.maps.Marker({
                   position: { lat: {{ sector.latitud }}, lng: {{ sector.longitud }} },
                   map: map,
