@@ -111,8 +111,7 @@
     </div>
     <script>
         async function initMap() {
-            const lat = parseFloat('{{ latest_data.latitude|default:"0" }}');
-            const lng = parseFloat('{{ latest_data.longitude|default:"0" }}');
+          
             var lat = "{{ latest_data.latitude|default:'0' }}".replace(',', '.');
             var lng = "{{ latest_data.longitude|default:'0' }}".replace(',', '.');
             const map = new google.maps.Map(document.getElementById('map'), {
