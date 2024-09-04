@@ -139,7 +139,7 @@
             // Agregar un evento click al marcador para abrir el InfoWindow
             marker.addListener('click', function() {
                 // Cerrar cualquier InfoWindow abierto
-                infoWindowArray.forEach(function(iw) {
+                infoWindow.forEach(function(iw) {
                     iw.close();
                 });
     
