@@ -127,6 +127,18 @@
                 position: { lat: latitude, lng: longitude },
                 title: 'Sensor Location'
             });
+            const infoWindow = new google.maps.InfoWindow({
+                content: '<div><strong>Ubicación Sensor</strong></div>',
+            });
+    
+            // Agregar un evento click al marcador para abrir el InfoWindow
+            marker.addListener('click', () => {
+                infoWindow.open({
+                    anchor: marker,
+                    map,
+                    shouldFocus: false,
+                });
+            });
         }
 
         window.addEventListener('load', () => {
