@@ -274,10 +274,12 @@
           window.addEventListener('load', () => {
               const script = document.createElement('script');
               script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDT0QJ4JVXUrTA8mRZN_YXjy2CZDsa_vmw&callback=initMap";
+              
               script.defer = true;
               document.head.appendChild(script);
           });
       </script>
+      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDT0QJ4JVXUrTA8mRZN_YXjy2CZDsa_vmw&callback=initMap&libraries=places" async defer></script>
             
         </body>
         
