@@ -122,11 +122,12 @@
             });
             var latitude = parseFloat(lat);
             var longitude = parseFloat(lng);
-            new google.maps.marker.AdvancedMarkerElement({
-                map: map,
-                position: { lat: latitude, lng: longitude },
-                title: 'Sensor Location'
-            });
+
+            const marker = new google.maps.Marker({
+            position: { lat: latitude, lng: longitude },
+            map: map,
+            title: 'Sensor Location'
+        });
 
            
 
