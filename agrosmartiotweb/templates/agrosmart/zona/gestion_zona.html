@@ -249,8 +249,7 @@
   
               {% for sector in sectores %}
               
-              var latitud = parseFloat(lat);
-              var longitud = parseFloat(lng);
+             
               var marker = new google.maps.Marker({
                   position: { lat: {{ sector.latitud }}, lng: {{ sector.longitud }} },
                   map: map,
