@@ -237,10 +237,10 @@
                 </div>
             {% endfor %}
         </ul>
-        <<script>
+        <script>
           function initMap() {
-            var lat = '{{ sector.latitud }}'.replace(',', '.');
-            var lng = '{{ sector.longitud }}'.replace(',', '.');
+            var lat = '{{ sector.latitud }}';
+            var lng = '{{ sector.longitud }}';
             var map = new google.maps.Map(document.getElementById('map'), {
               zoom: 12,
               center: { lat: parseFloat(lat), lng: parseFloat(lng) } // Ubicación inicial, por ejemplo, Santiago, Chile
@@ -251,8 +251,8 @@
             {% for sector in sectores %}
             
             // Convertir coordenadas de comas a puntos
-            var lat = '{{ sector.latitud }}'.replace(',', '.');
-            var lng = '{{ sector.longitud }}'.replace(',', '.');
+            var lat = '{{ sector.latitud }}';
+            var lng = '{{ sector.longitud }}';
             
             var marker = new google.maps.Marker({
               position: { lat: parseFloat(lat), lng: parseFloat(lng) },
