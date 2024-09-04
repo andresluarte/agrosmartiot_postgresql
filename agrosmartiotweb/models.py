@@ -25,8 +25,20 @@ from django.db import models
 
 class Sector(models.Model):
     nombre = models.CharField(max_length=50)
-    latitud = models.DecimalField(max_digits=9, decimal_places=6)
-    longitud = models.DecimalField(max_digits=9, decimal_places=6)
+    latitud = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    longitud = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    google_maps_link = models.URLField(max_length=200, null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if self.google_maps_link:
+            # Extraer coordenadas del enlace de Google Maps
+            match = re.search(r'@(-?\d+\.\d+),(-?\d+\.\d+)', self.google_maps_link)
+            if match:
+                self.latitud = float(match.group(1))
+                self.longitud = float(match.group(2))
+            else:
+                raise ValidationError('El enlace de Google Maps no es válido.')
+        super(Sector, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.nombre
