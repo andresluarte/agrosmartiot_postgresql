@@ -25,6 +25,8 @@ from django.db import models
 
 import requests
 
+import requests
+
 class Sector(models.Model):
     nombre = models.CharField(max_length=50)
     latitud = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
@@ -65,14 +67,13 @@ class Sector(models.Model):
         Resolver enlaces cortos de Google Maps y obtener la URL completa.
         """
         try:
-            response = requests.head(short_link, allow_redirects=True)
+            response = requests.get(short_link, allow_redirects=True)
             return response.url
         except requests.RequestException:
             return None
 
     def __str__(self):
         return self.nombre
-
 
 class Huerto(MPTTModel):
     nombre = models.CharField(max_length=50)
