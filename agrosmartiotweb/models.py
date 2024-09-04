@@ -40,7 +40,7 @@ class Sector(models.Model):
                 self.longitud = lng
         super(Sector, self).save(*args, **kwargs)
 
-    
+        
 
     def resolve_google_maps_link(self, short_link):
         """
