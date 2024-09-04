@@ -273,9 +273,6 @@ class SectorForm(forms.ModelForm):
             return lat, lng
         return None, None
 
-
-
-
 class HuertoForm(forms.ModelForm):
     class Meta:
         model = Huerto
