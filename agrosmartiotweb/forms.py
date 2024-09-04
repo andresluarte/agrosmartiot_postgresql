@@ -222,16 +222,6 @@ from .models import Sector, Huerto, Lote
 from django import forms
 from .models import Sector
 
-import requests
-import re
-from django import forms
-from .models import Sector
-
-import requests
-import re
-from django import forms
-from .models import Sector
-
 class SectorForm(forms.ModelForm):
     google_maps_link = forms.URLField(
         max_length=200, 
@@ -251,35 +241,6 @@ class SectorForm(forms.ModelForm):
 
         if not link and (not lat or not lng):
             raise forms.ValidationError("Debes proporcionar coordenadas o un enlace de Google Maps.")
-
-        if link and (not lat or not lng):
-            try:
-                full_url = self.get_full_google_maps_link(link)
-                lat, lng = self.extract_coordinates_from_url(full_url)
-                if lat and lng:
-                    cleaned_data["latitud"] = lat
-                    cleaned_data["longitud"] = lng
-                else:
-                    raise forms.ValidationError("No se pudieron extraer coordenadas del enlace proporcionado.")
-            except Exception as e:
-                raise forms.ValidationError(f"Error al procesar el enlace de Google Maps: {str(e)}")
-
-        return cleaned_data
-
-    def get_full_google_maps_link(self, short_url):
-        response = requests.get(short_url, allow_redirects=True)
-        return response.url
-
-    def extract_coordinates_from_url(self, url):
-        pattern = r'@(-?\d+\.\d+),(-?\d+\.\d+),'
-        match = re.search(pattern, url)
-        if match:
-            lat = match.group(1)
-            lng = match.group(2)
-            return lat, lng
-        return None, None
-
-
 
 
 
