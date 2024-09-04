@@ -196,49 +196,35 @@
                   <div id="map-{{ sector.id }}" class="map"></div>
                   <script>
                     function initMap{{ sector.id }}() {
-                      {% for sector in sectores %}
                       var lat = parseFloat('{{ sector.latitud|escapejs }}');
                       var lng = parseFloat('{{ sector.longitud|escapejs }}');
-                        var map = new google.maps.Map(document.getElementById('map'), {
-                            zoom: 12,
-                            center: { lat: lat, lng: lng } // Ubicación inicial, por ejemplo, Santiago, Chile
-                        });
+                      var map = new google.maps.Map(document.getElementById('map-{{ sector.id }}'), {
+                        zoom: 12,
+                        center: { lat: lat, lng: lng }
+                      });
             
-                        var infoWindowArray = [];
+                      var marker = new google.maps.Marker({
+                        position: { lat: lat, lng: lng },
+                        map: map,
+                        title: '{{ sector.nombre }}'
+                      });
             
-                        
-                        
-                        var lat = parseFloat('{{ sector.latitud|escapejs }}');
-                        var lng = parseFloat('{{ sector.longitud|escapejs }}');
-                        var marker = new google.maps.Marker({
-                          position: { lat: lat, lng: lng },
-                            map: map,
-                            title: '{{ sector.nombre }}'
-                        });
+                      var infowindow = new google.maps.InfoWindow({
+                        content: '<div><strong>{{ sector.nombre }}</strong></div>'
+                      });
             
-                        var infowindow = new google.maps.InfoWindow({
-                            content: '<div><strong>{{ sector.nombre }}</strong></div>'
-                        });
-            
-                        infoWindowArray.push(infowindow);
-            
-                        marker.addListener('click', function() {
-                            infoWindowArray.forEach(function(iw) {
-                                iw.close();
-                            });
-                            infowindow.open(map, marker);
-                        });
-                        {% endfor %}
+                      marker.addListener('click', function() {
+                        infowindow.open(map, marker);
+                      });
                     }
             
                     window.addEventListener('load', () => {
-                        const script = document.createElement('script');
-                        script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDT0QJ4JVXUrTA8mRZN_YXjy2CZDsa_vmw&callback=initMap";
-                        
-                        script.defer = true;
-                        document.head.appendChild(script);
+                      const script = document.createElement('script');
+                      script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDT0QJ4JVXUrTA8mRZN_YXjy2CZDsa_vmw&callback=initMap{{ sector.id }}";
+                      script.defer = true;
+                      document.head.appendChild(script);
                     });
-                </script>
+                  </script>
                   <ul>
                       <li class="nivel huerto ">HUERTO:</li>
                       {% for huerto in sector.huerto_set.all %}
