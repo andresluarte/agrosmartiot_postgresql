@@ -111,46 +111,41 @@
     </div>
     <script>
         async function initMap() {
+          
             var lat = "{{ latest_data.latitude|default:'0' }}".replace(',', '.');
-        var lng = "{{ latest_data.longitude|default:'0' }}".replace(',', '.');
-        
-        const map = new google.maps.Map(document.getElementById('map'), {
-            center: { lat: parseFloat(lat), lng: parseFloat(lng) },
-            zoom: 19,
-            mapId: 'DEMO_MAP_ID'
-        });
+            var lng = "{{ latest_data.longitude|default:'0' }}".replace(',', '.');
+            const map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: parseFloat(lat), lng: parseFloat(lng) },
 
-        var latitude = parseFloat(lat);
-        var longitude = parseFloat(lng);
-
-        // Crear un marcador estándar
-        const marker = new google.maps.Marker({
-            position: { lat: latitude, lng: longitude },
-            map: map,
-            title: 'Sensor Location'
-        });
-
-        // Array para almacenar los InfoWindows
-        var infoWindowArray = [];
-
-        // Crear el InfoWindow
-        var infowindow = new google.maps.InfoWindow({
-            content: '<div><strong>Ubicación Sensor</strong></div>',
-        });
-
-        // Agregar el InfoWindow al array
-        infoWindowArray.push(infowindow);
-
-        // Agregar evento click al marcador
-        marker.addListener('click', function() {
-            // Cerrar cualquier InfoWindow abierto
-            infoWindowArray.forEach(function(iw) {
-                iw.close();
+                zoom: 19,
+                mapId: 'DEMO_MAP_ID'
             });
-
-            // Abrir el InfoWindow asociado con el marcador
-            infowindow.open(map, marker);
-        });
+            var latitude = parseFloat(lat);
+            var longitude = parseFloat(lng);
+            new google.maps.marker.AdvancedMarkerElement({
+                map: map,
+                position: { lat: latitude, lng: longitude },
+                title: 'Sensor Location'
+            });
+            const infoWindow = new google.maps.InfoWindow({
+                content: '<div><strong>Ubicación Sensor</strong></div>',
+            });
+            var infoWindowArray = [];
+            var infowindow = new google.maps.InfoWindow({
+                content: '<div><strong>Ubicación Sensor</strong></div>',
+            });
+            infoWindowArray.push(infowindow);
+            // Agregar un evento click al marcador para abrir el InfoWindow
+            marker.addListener('click', function() {
+                // Cerrar cualquier InfoWindow abierto
+                infoWindowArray.forEach(function(iw) {
+                    iw.close();
+                });
+    
+                // Abrir el InfoWindow asociado con el marcador
+                infowindow.open(map, marker);
+            });
+        }
 
         window.addEventListener('load', () => {
             const script = document.createElement('script');
