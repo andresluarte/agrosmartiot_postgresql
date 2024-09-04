@@ -130,12 +130,12 @@
 
            
 
-            var infoWindowArray = [];
+            var infoWindow = [];
 
             var infowindow = new google.maps.InfoWindow({
                 content: '<div><strong>Ubicación Sensor</strong></div>',
             });
-            infoWindowArray.push(infowindow);
+            infoWindow.push(infowindow);
             // Agregar un evento click al marcador para abrir el InfoWindow
             marker.addListener('click', function() {
                 // Cerrar cualquier InfoWindow abierto
@@ -155,18 +155,7 @@
             document.head.appendChild(script);
         });
 
-        setInterval(() => {
-            const lat = parseFloat('{{ latest_data.latitude|default:"0" }}');
-            const lng = parseFloat('{{ latest_data.longitude|default:"0" }}');
-            if (window.map) {
-                const marker = new google.maps.marker.AdvancedMarkerElement({
-                    map: window.map,
-                    position: { lat: lat, lng: lng },
-                    title: 'Sensor Location'
-                });
-                window.map.setCenter({ lat: lat, lng: lng });
-            }
-        }, 2000);
+        
     </script>
 </body>
 </html>
