@@ -88,6 +88,7 @@ urlpatterns = [
 
 
     path('gestion_finanzas/', views.FinanzasList, name='gestion_finanzas'),
+    # path('gestion_finanzas/', views.FinanzasList2, name='gestion_finanzas'),
    
     path('agregar_gasto_financiero/', views.agregar_gasto_financiero, name='agregar_gasto_financiero'),
 
