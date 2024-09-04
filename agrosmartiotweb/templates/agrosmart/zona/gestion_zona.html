@@ -195,7 +195,7 @@
                   </li>
                   <div id="map-{{ sector.id }}" class="map"></div>
                   <script>
-                    function initMap() {
+                    function initMap{{ sector.id }}() {
                       {% for sector in sectores %}
                       var lat = parseFloat('{{ sector.latitud|escapejs }}');
                       var lng = parseFloat('{{ sector.longitud|escapejs }}');
