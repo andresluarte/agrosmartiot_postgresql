@@ -25,7 +25,6 @@ from django.db import models
 
 import requests
 
-import requests
 
 class Sector(models.Model):
     nombre = models.CharField(max_length=50)
