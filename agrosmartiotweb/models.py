@@ -20,12 +20,11 @@ def validate_rut(value):
     if not re.match(rut_pattern, value):
         raise ValidationError('El formato del RUT no es válido')
 
-from django.contrib.gis.db import models as gis_models
+
 from django.db import models
 
 class Sector(models.Model):
     nombre = models.CharField(max_length=50)
-    ubicacion = gis_models.PointField(null=True, blank=True)  # Campo geoespacial
 
     def __str__(self):
         return self.nombre
@@ -34,7 +33,7 @@ class Huerto(MPTTModel):
     nombre = models.CharField(max_length=50)
     sector = models.ForeignKey(Sector, on_delete=models.CASCADE)
     parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='lotes')
-    ubicacion = gis_models.PointField(null=True, blank=True)  # Campo geoespacial
+    
 
     class MPTTMeta:
         order_insertion_by = ['nombre']
@@ -45,7 +44,7 @@ class Huerto(MPTTModel):
 class Lote(models.Model):
     nombre = models.CharField(max_length=50)
     huerto = models.ForeignKey(Huerto, on_delete=models.CASCADE)
-    ubicacion = gis_models.PointField(null=True, blank=True)  # Campo geoespacial
+    
 
     def __str__(self):
         return self.nombre
