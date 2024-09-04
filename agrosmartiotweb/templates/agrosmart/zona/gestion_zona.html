@@ -239,48 +239,48 @@
         </ul>
         <script>
           function initMap() {
-            var lat = '{{ sector.latitud }}';
-            var lng = '{{ sector.longitud }}';
+            var lat = parseFloat('{{ sector.latitud }}');
+            var lng = parseFloat('{{ sector.longitud }}');
             var map = new google.maps.Map(document.getElementById('map'), {
-              zoom: 12,
-              center: { lat: (lat), lng: (lng) } // Ubicación inicial, por ejemplo, Santiago, Chile
+                zoom: 12,
+                center: { lat: lat, lng: lng } // Ubicación inicial, por ejemplo, Santiago, Chile
             });
         
             var infoWindowArray = [];
         
             {% for sector in sectores %}
-            
             // Convertir coordenadas de comas a puntos
-            var lat = '{{ sector.latitud }}';
-            var lng = '{{ sector.longitud }}';
-            
+            var lat = parseFloat('{{ sector.latitud|escapejs }}');
+            var lng = parseFloat('{{ sector.longitud|escapejs }}');
+        
             var marker = new google.maps.Marker({
-              position: { lat: (lat), lng: (lng) },
-              map: map,
-              title: '{{ sector.nombre }}'
+                position: { lat: lat, lng: lng },
+                map: map,
+                title: '{{ sector.nombre }}'
             });
         
             var infowindow = new google.maps.InfoWindow({
-              content: '<div><strong>{{ sector.nombre }}</strong></div>'
+                content: '<div><strong>{{ sector.nombre }}</strong></div>'
             });
         
             infoWindowArray.push(infowindow);
         
             marker.addListener('click', function() {
-              infoWindowArray.forEach(function(iw) {
-                iw.close();
-              });
-              infowindow.open(map, marker);
+                infoWindowArray.forEach(function(iw) {
+                    iw.close();
+                });
+                infowindow.open(map, marker);
             });
             {% endfor %}
-          }
+        }
         
-          window.addEventListener('load', () => {
+        window.addEventListener('load', () => {
             const script = document.createElement('script');
             script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDT0QJ4JVXUrTA8mRZN_YXjy2CZDsa_vmw&callback=initMap";
             script.defer = true;
             document.head.appendChild(script);
-          });
+        });
+        
         </script>
         
       
