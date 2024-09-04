@@ -172,39 +172,87 @@
           <div id="map"></div>
           <script>
             function initMap() {
-                // Crear un mapa vacío
-                var map = new google.maps.Map(document.getElementById('map'), {
-                    zoom: 12,
-                    center: { lat: -33.4489, lng: -70.6693 } // Coordenadas de Santiago, Chile como centro inicial
-                });
+                // Función para manejar el éxito en la obtención de la ubicación
+                function handleLocationSuccess(position) {
+                    var userLat = position.coords.latitude;
+                    var userLng = position.coords.longitude;
+                    var userLocation = { lat: userLat, lng: userLng };
     
-                // Array para almacenar las ventanas de información
-                var infoWindowArray = [];
-    
-                {% for sector in sectores %}
-                var lat = parseFloat('{{ sector.latitud|escapejs }}');
-                var lng = parseFloat('{{ sector.longitud|escapejs }}');
-                var marker = new google.maps.Marker({
-                    position: { lat: lat, lng: lng },
-                    map: map,
-                    title: '{{ sector.nombre }}'
-                });
-    
-                var infowindow = new google.maps.InfoWindow({
-                    content: '<div><strong>{{ sector.nombre }}</strong></div>'
-                });
-    
-                // Añadir el marcador al array de ventanas de información
-                infoWindowArray.push(infowindow);
-    
-                // Añadir un listener para mostrar la ventana de información al hacer clic en el marcador
-                marker.addListener('click', function() {
-                    infoWindowArray.forEach(function(iw) {
-                        iw.close();
+                    // Crear un mapa centrado en la ubicación del usuario
+                    var map = new google.maps.Map(document.getElementById('map'), {
+                        zoom: 12,
+                        center: userLocation
                     });
-                    infowindow.open(map, marker);
-                });
-                {% endfor %}
+    
+                    // Array para almacenar las ventanas de información
+                    var infoWindowArray = [];
+    
+                    {% for sector in sectores %}
+                    var lat = parseFloat('{{ sector.latitud|escapejs }}');
+                    var lng = parseFloat('{{ sector.longitud|escapejs }}');
+                    var marker = new google.maps.Marker({
+                        position: { lat: lat, lng: lng },
+                        map: map,
+                        title: '{{ sector.nombre }}'
+                    });
+    
+                    var infowindow = new google.maps.InfoWindow({
+                        content: '<div><strong>{{ sector.nombre }}</strong></div>'
+                    });
+    
+                    // Añadir el marcador al array de ventanas de información
+                    infoWindowArray.push(infowindow);
+    
+                    // Añadir un listener para mostrar la ventana de información al hacer clic en el marcador
+                    marker.addListener('click', function() {
+                        infoWindowArray.forEach(function(iw) {
+                            iw.close();
+                        });
+                        infowindow.open(map, marker);
+                    });
+                    {% endfor %}
+                }
+    
+                // Función para manejar los errores de geolocalización
+                function handleLocationError() {
+                    alert("No se pudo obtener la ubicación. Mostrando el mapa centrado en Santiago, Chile.");
+                    var map = new google.maps.Map(document.getElementById('map'), {
+                        zoom: 12,
+                        center: { lat: -33.4489, lng: -70.6693 } // Coordenadas de Santiago, Chile
+                    });
+                    // Agregar los marcadores de todos modos
+                    {% for sector in sectores %}
+                    var lat = parseFloat('{{ sector.latitud|escapejs }}');
+                    var lng = parseFloat('{{ sector.longitud|escapejs }}');
+                    var marker = new google.maps.Marker({
+                        position: { lat: lat, lng: lng },
+                        map: map,
+                        title: '{{ sector.nombre }}'
+                    });
+    
+                    var infowindow = new google.maps.InfoWindow({
+                        content: '<div><strong>{{ sector.nombre }}</strong></div>'
+                    });
+    
+                    // Añadir el marcador al array de ventanas de información
+                    infoWindowArray.push(infowindow);
+    
+                    // Añadir un listener para mostrar la ventana de información al hacer clic en el marcador
+                    marker.addListener('click', function() {
+                        infoWindowArray.forEach(function(iw) {
+                            iw.close();
+                        });
+                        infowindow.open(map, marker);
+                    });
+                    {% endfor %}
+                }
+    
+                // Intentar obtener la ubicación del usuario
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(handleLocationSuccess, handleLocationError);
+                } else {
+                    handleLocationError();
+                }
             }
     
             // Inicializar el mapa cuando la página esté completamente cargada
