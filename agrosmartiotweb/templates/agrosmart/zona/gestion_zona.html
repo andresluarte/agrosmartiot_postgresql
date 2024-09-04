@@ -243,7 +243,7 @@
             var lng = '{{ sector.longitud }}';
             var map = new google.maps.Map(document.getElementById('map'), {
               zoom: 12,
-              center: { lat: parseFloat(lat), lng: parseFloat(lng) } // Ubicación inicial, por ejemplo, Santiago, Chile
+              center: { lat: (lat), lng: (lng) } // Ubicación inicial, por ejemplo, Santiago, Chile
             });
         
             var infoWindowArray = [];
@@ -255,7 +255,7 @@
             var lng = '{{ sector.longitud }}';
             
             var marker = new google.maps.Marker({
-              position: { lat: parseFloat(lat), lng: parseFloat(lng) },
+              position: { lat: (lat), lng: (lng) },
               map: map,
               title: '{{ sector.nombre }}'
             });
