@@ -114,7 +114,8 @@
             const lat = parseFloat('{{ latest_data.latitude|default:"0" }}');
             const lng = parseFloat('{{ latest_data.longitude|default:"0" }}');
             const map = new google.maps.Map(document.getElementById('map'), {
-                center: { lat: -36.792713, lng: -73.049629 },
+                center: { lat: {{ latest_data.latitude|default:"0"|replace:",","." }}, lng: {{ latest_data.longitude|default:"0"|replace:",","." }} },
+
                 zoom: 19,
                 mapId: 'DEMO_MAP_ID'
             });
