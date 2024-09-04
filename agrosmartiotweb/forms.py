@@ -229,6 +229,11 @@ from .models import Sector
 
 
 
+import requests
+import re
+from django import forms
+from .models import Sector
+
 class SectorForm(forms.ModelForm):
     google_maps_link = forms.URLField(
         max_length=200, 
@@ -251,7 +256,9 @@ class SectorForm(forms.ModelForm):
 
         if link and (not lat or not lng):
             try:
+                # Intentar obtener la URL completa del enlace acortado
                 full_url = self.get_full_google_maps_link(link)
+                # Intentar extraer las coordenadas de la URL
                 lat, lng = self.extract_coordinates_from_url(full_url)
                 if lat and lng:
                     cleaned_data["latitud"] = lat
@@ -264,10 +271,16 @@ class SectorForm(forms.ModelForm):
         return cleaned_data
 
     def get_full_google_maps_link(self, short_url):
-        response = requests.get(short_url, allow_redirects=True)
-        return response.url
+        try:
+            # Realizar la solicitud GET para resolver el enlace acortado
+            response = requests.get(short_url, allow_redirects=True)
+            # Retornar la URL completa
+            return response.url
+        except requests.RequestException as e:
+            raise forms.ValidationError(f"Error al intentar resolver el enlace: {str(e)}")
 
     def extract_coordinates_from_url(self, url):
+        # Patrón para extraer las coordenadas
         pattern = r'@(-?\d+\.\d+),(-?\d+\.\d+),'
         match = re.search(pattern, url)
         if match:
@@ -275,7 +288,6 @@ class SectorForm(forms.ModelForm):
             lng = match.group(2)
             return lat, lng
         return None, None
-
 
 
 
