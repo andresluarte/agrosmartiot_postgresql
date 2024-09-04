@@ -120,10 +120,11 @@
                 zoom: 19,
                 mapId: 'DEMO_MAP_ID'
             });
-
+            var latitude = parseFloat(lat);
+            var longitude = parseFloat(lng);
             new google.maps.marker.AdvancedMarkerElement({
                 map: map,
-                position: { lat: lat, lng: lng },
+                position: { lat: latitude, lng: longitude },
                 title: 'Sensor Location'
             });
         }
