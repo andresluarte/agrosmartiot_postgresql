@@ -372,9 +372,7 @@ def gestion_zona(request):
     }
 
     return render(request, "agrosmart/zona/gestion_zona.html", context)
-def sector_map_view(request):
-    sectores = Sector.objects.all()
-    return render(request, 'zona/gestion_zona.html', {'sectores': sectores})  
+
 
 
 

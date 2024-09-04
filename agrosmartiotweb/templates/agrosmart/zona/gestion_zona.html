@@ -194,6 +194,49 @@
                       
                   </li>
                   <div id="map"></div>
+                  <script>
+                    function initMap() {
+                      {% for sector in sectores %}
+                        var map = new google.maps.Map(document.getElementById('map'), {
+                            zoom: 12,
+                            center: { lat: -36.7927, lng: -73.0496 } // Ubicación inicial, por ejemplo, Santiago, Chile
+                        });
+            
+                        var infoWindowArray = [];
+            
+                        
+                        
+                        var lat = parseFloat('{{ sector.latitud|escapejs }}');
+                        var lng = parseFloat('{{ sector.longitud|escapejs }}');
+                        var marker = new google.maps.Marker({
+                          position: { lat: lat, lng: lng },
+                            map: map,
+                            title: '{{ sector.nombre }}'
+                        });
+            
+                        var infowindow = new google.maps.InfoWindow({
+                            content: '<div><strong>{{ sector.nombre }}</strong></div>'
+                        });
+            
+                        infoWindowArray.push(infowindow);
+            
+                        marker.addListener('click', function() {
+                            infoWindowArray.forEach(function(iw) {
+                                iw.close();
+                            });
+                            infowindow.open(map, marker);
+                        });
+                        {% endfor %}
+                    }
+            
+                    window.addEventListener('load', () => {
+                        const script = document.createElement('script');
+                        script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDT0QJ4JVXUrTA8mRZN_YXjy2CZDsa_vmw&callback=initMap";
+                        
+                        script.defer = true;
+                        document.head.appendChild(script);
+                    });
+                </script>
                   <ul>
                       <li class="nivel huerto ">HUERTO:</li>
                       {% for huerto in sector.huerto_set.all %}
@@ -237,49 +280,7 @@
                 </div>
             {% endfor %}
         </ul>
-        <script>
-          function initMap() {
-              
-              var map = new google.maps.Map(document.getElementById('map'), {
-                  zoom: 12,
-                  center: { lat: -36.7927, lng: -73.0496 } // Ubicación inicial, por ejemplo, Santiago, Chile
-              });
-  
-              var infoWindowArray = [];
-  
-              {% for sector in sectores %}
-              
-              var lat = parseFloat('{{ sector.latitud|escapejs }}');
-              var lng = parseFloat('{{ sector.longitud|escapejs }}');
-              var marker = new google.maps.Marker({
-                position: { lat: lat, lng: lng },
-                  map: map,
-                  title: '{{ sector.nombre }}'
-              });
-  
-              var infowindow = new google.maps.InfoWindow({
-                  content: '<div><strong>{{ sector.nombre }}</strong></div>'
-              });
-  
-              infoWindowArray.push(infowindow);
-  
-              marker.addListener('click', function() {
-                  infoWindowArray.forEach(function(iw) {
-                      iw.close();
-                  });
-                  infowindow.open(map, marker);
-              });
-              {% endfor %}
-          }
-  
-          window.addEventListener('load', () => {
-              const script = document.createElement('script');
-              script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDT0QJ4JVXUrTA8mRZN_YXjy2CZDsa_vmw&callback=initMap";
-              
-              script.defer = true;
-              document.head.appendChild(script);
-          });
-      </script>
+        
       
             
         </body>
