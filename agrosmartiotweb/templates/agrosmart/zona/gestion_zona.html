@@ -188,28 +188,32 @@
                     var infoWindowArray = [];
     
                     {% for sector in sectores %}
-                    var lat = parseFloat('{{ sector.latitud|escapejs }}');
-                    var lng = parseFloat('{{ sector.longitud|escapejs }}');
-                    var marker = new google.maps.Marker({
-                        position: { lat: lat, lng: lng },
-                        map: map,
-                        title: '{{ sector.nombre }}'
-                    });
-    
-                    var infowindow = new google.maps.InfoWindow({
-                        content: '<div><strong>{{ sector.nombre }}</strong></div>'
-                    });
-    
-                    // Añadir el marcador al array de ventanas de información
-                    infoWindowArray.push(infowindow);
-    
-                    // Añadir un listener para mostrar la ventana de información al hacer clic en el marcador
-                    marker.addListener('click', function() {
-                        infoWindowArray.forEach(function(iw) {
-                            iw.close();
+                    (function(lat, lng, nombre) {
+                        var marker = new google.maps.Marker({
+                            position: { lat: lat, lng: lng },
+                            map: map,
+                            title: nombre
                         });
-                        infowindow.open(map, marker);
-                    });
+    
+                        var infowindow = new google.maps.InfoWindow({
+                            content: '<div><strong>' + nombre + '</strong></div>'
+                        });
+    
+                        // Añadir el marcador al array de ventanas de información
+                        infoWindowArray.push(infowindow);
+    
+                        // Añadir un listener para mostrar la ventana de información al hacer clic en el marcador
+                        marker.addListener('click', function() {
+                            infoWindowArray.forEach(function(iw) {
+                                iw.close();
+                            });
+                            infowindow.open(map, marker);
+                        });
+                    })(
+                        parseFloat('{{ sector.latitud|escapejs }}'),
+                        parseFloat('{{ sector.longitud|escapejs }}'),
+                        '{{ sector.nombre|escapejs }}'
+                    );
                     {% endfor %}
                 }
     
@@ -220,30 +224,37 @@
                         zoom: 12,
                         center: { lat: -33.4489, lng: -70.6693 } // Coordenadas de Santiago, Chile
                     });
+                    // Array para almacenar las ventanas de información
+                    var infoWindowArray = [];
+    
                     // Agregar los marcadores de todos modos
                     {% for sector in sectores %}
-                    var lat = parseFloat('{{ sector.latitud|escapejs }}');
-                    var lng = parseFloat('{{ sector.longitud|escapejs }}');
-                    var marker = new google.maps.Marker({
-                        position: { lat: lat, lng: lng },
-                        map: map,
-                        title: '{{ sector.nombre }}'
-                    });
-    
-                    var infowindow = new google.maps.InfoWindow({
-                        content: '<div><strong>{{ sector.nombre }}</strong></div>'
-                    });
-    
-                    // Añadir el marcador al array de ventanas de información
-                    infoWindowArray.push(infowindow);
-    
-                    // Añadir un listener para mostrar la ventana de información al hacer clic en el marcador
-                    marker.addListener('click', function() {
-                        infoWindowArray.forEach(function(iw) {
-                            iw.close();
+                    (function(lat, lng, nombre) {
+                        var marker = new google.maps.Marker({
+                            position: { lat: lat, lng: lng },
+                            map: map,
+                            title: nombre
                         });
-                        infowindow.open(map, marker);
-                    });
+    
+                        var infowindow = new google.maps.InfoWindow({
+                            content: '<div><strong>' + nombre + '</strong></div>'
+                        });
+    
+                        // Añadir el marcador al array de ventanas de información
+                        infoWindowArray.push(infowindow);
+    
+                        // Añadir un listener para mostrar la ventana de información al hacer clic en el marcador
+                        marker.addListener('click', function() {
+                            infoWindowArray.forEach(function(iw) {
+                                iw.close();
+                            });
+                            infowindow.open(map, marker);
+                        });
+                    })(
+                        parseFloat('{{ sector.latitud|escapejs }}'),
+                        parseFloat('{{ sector.longitud|escapejs }}'),
+                        '{{ sector.nombre|escapejs }}'
+                    );
                     {% endfor %}
                 }
     
