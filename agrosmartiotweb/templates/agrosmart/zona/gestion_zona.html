@@ -239,9 +239,11 @@
         </ul>
         <<script>
           function initMap() {
+            var lat = '{{ sector.latitud }}'.replace(',', '.');
+            var lng = '{{ sector.longitud }}'.replace(',', '.');
             var map = new google.maps.Map(document.getElementById('map'), {
               zoom: 12,
-              center: { lat: -33.4489, lng: -70.6693 } // Ubicación inicial, por ejemplo, Santiago, Chile
+              center: { lat: parseFloat(lat), lng: parseFloat(lng) } // Ubicación inicial, por ejemplo, Santiago, Chile
             });
         
             var infoWindowArray = [];
