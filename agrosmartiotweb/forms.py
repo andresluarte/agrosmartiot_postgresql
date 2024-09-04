@@ -238,7 +238,7 @@ class SectorModificarForm(forms.ModelForm):
     
     class Meta:
         model = Trabajador
-        fields = ['nombre','latitud','longitud']
+        fields =  ["nombre"]
 class HuertoModificarForm(forms.ModelForm):
     class Meta:
         model = Huerto
