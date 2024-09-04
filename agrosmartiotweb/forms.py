@@ -273,16 +273,25 @@ class SectorForm(forms.ModelForm):
         """
         Extraer coordenadas del enlace completo de Google Maps.
         """
+        # Intentar con el formato común de Google Maps
         match = re.search(r'@(-?\d+\.\d+),(-?\d+\.\d+)', link)
         if match:
             lat = float(match.group(1))
             lng = float(match.group(2))
             return lat, lng
 
+        # Intentar con el formato alternativo "loc"
         match_alt = re.search(r'loc:(-?\d+\.\d+),(-?\d+\.\d+)', link)
         if match_alt:
             lat = float(match_alt.group(1))
             lng = float(match_alt.group(2))
+            return lat, lng
+
+        # Intentar con el formato común de búsqueda en Google Maps
+        match_search = re.search(r'(-?\d+\.\d+),(-?\d+\.\d+)', link)
+        if match_search:
+            lat = float(match_search.group(1))
+            lng = float(match_search.group(2))
             return lat, lng
 
         return None, None
