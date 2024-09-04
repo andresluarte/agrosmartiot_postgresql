@@ -372,7 +372,9 @@ def gestion_zona(request):
     }
 
     return render(request, "agrosmart/zona/gestion_zona.html", context)
-
+def sector_map_view(request):
+    sectores = Sector.objects.all()
+    return render(request, 'zona/gestion_zona.html', {'sectores': sectores})  
 
 
 
@@ -560,9 +562,7 @@ def receive_data(request):
         return JsonResponse({"status": "success"})
     else:
         return JsonResponse({"message": "Invalid request method"}, status=405)
-def sector_map_view(request):
-    sectores = Sector.objects.all()
-    return render(request, 'zona/gestion_zona.html', {'sectores': sectores})  
+
 from .models import HumiditySoil
 
 from django.http import JsonResponse
