@@ -228,7 +228,7 @@ class SectorForm(forms.ModelForm):
     google_maps_link = forms.URLField(
         max_length=200, 
         required=False,
-        label="Enlace de Google Maps (opcional)"
+        label="Enlace de Google Maps"
     )
 
     class Meta:
@@ -243,6 +243,7 @@ class SectorForm(forms.ModelForm):
 
         if not link and (not lat or not lng):
             raise forms.ValidationError("Debes proporcionar coordenadas o un enlace de Google Maps.")
+        return cleaned_data
 
 class HuertoForm(forms.ModelForm):
     class Meta:

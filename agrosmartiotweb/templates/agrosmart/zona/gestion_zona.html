@@ -177,16 +177,16 @@
                     var userLat = position.coords.latitude;
                     var userLng = position.coords.longitude;
                     var userLocation = { lat: userLat, lng: userLng };
-    
+        
                     // Crear un mapa centrado en la ubicación del usuario
                     var map = new google.maps.Map(document.getElementById('map'), {
                         zoom: 12,
                         center: userLocation
                     });
-    
+        
                     // Array para almacenar las ventanas de información
                     var infoWindowArray = [];
-    
+        
                     {% for sector in sectores %}
                     (function(lat, lng, nombre) {
                         var marker = new google.maps.Marker({
@@ -194,14 +194,14 @@
                             map: map,
                             title: nombre
                         });
-    
+        
                         var infowindow = new google.maps.InfoWindow({
                             content: '<div><strong>' + nombre + '</strong></div>'
                         });
-    
+        
                         // Añadir el marcador al array de ventanas de información
                         infoWindowArray.push(infowindow);
-    
+        
                         // Añadir un listener para mostrar la ventana de información al hacer clic en el marcador
                         marker.addListener('click', function() {
                             infoWindowArray.forEach(function(iw) {
@@ -210,13 +210,54 @@
                             infowindow.open(map, marker);
                         });
                     })(
-                        parseFloat('{{ sector.latitud|escapejs }}'),
-                        parseFloat('{{ sector.longitud|escapejs }}'),
+                        parseFloat('{{ sector.latitud|default:0 }}'),
+                        parseFloat('{{ sector.longitud|default:0 }}'),
                         '{{ sector.nombre|escapejs }}'
                     );
                     {% endfor %}
+        
+                    // Manejar marcadores basados en enlaces de Google Maps
+                    {% for sector in sectores %}
+                    (function(link) {
+                        var url = new URL(link, 'https://www.google.com');
+                        var params = new URLSearchParams(url.search.slice(1));
+                        var location = params.get('q');
+        
+                        if (location) {
+                            var coords = location.split(',');
+                            if (coords.length === 2) {
+                                var lat = parseFloat(coords[0]);
+                                var lng = parseFloat(coords[1]);
+        
+                                var marker = new google.maps.Marker({
+                                    position: { lat: lat, lng: lng },
+                                    map: map,
+                                    title: 'Google Maps Link',
+                                    icon: 'https://chart.googleapis.com/chart?size=21x21&color=FFFF00&source=marker'
+                                });
+        
+                                var infowindow = new google.maps.InfoWindow({
+                                    content: '<div><strong>Ubicación desde Google Maps</strong><br>' +
+                                              '<a href="' + link + '" target="_blank">Ver en Google Maps</a></div>'
+                                });
+        
+                                infoWindowArray.push(infowindow);
+        
+                                marker.addListener('click', function() {
+                                    infoWindowArray.forEach(function(iw) {
+                                        iw.close();
+                                    });
+                                    infowindow.open(map, marker);
+                                });
+                            }
+                        }
+                    })('{{ sector.google_maps_link|default:"" }}');
+                    {% endfor %}
+                    {% if not sectores %}
+                        alert("No hay sectores disponibles");
+                    {% endif %}
                 }
-    
+        
                 // Función para manejar los errores de geolocalización
                 function handleLocationError() {
                     alert("No se pudo obtener la ubicación. Mostrando el mapa centrado en Santiago, Chile.");
@@ -226,7 +267,7 @@
                     });
                     // Array para almacenar las ventanas de información
                     var infoWindowArray = [];
-    
+        
                     // Agregar los marcadores de todos modos
                     {% for sector in sectores %}
                     (function(lat, lng, nombre) {
@@ -235,14 +276,14 @@
                             map: map,
                             title: nombre
                         });
-    
+        
                         var infowindow = new google.maps.InfoWindow({
                             content: '<div><strong>' + nombre + '</strong></div>'
                         });
-    
+        
                         // Añadir el marcador al array de ventanas de información
                         infoWindowArray.push(infowindow);
-    
+        
                         // Añadir un listener para mostrar la ventana de información al hacer clic en el marcador
                         marker.addListener('click', function() {
                             infoWindowArray.forEach(function(iw) {
@@ -251,13 +292,13 @@
                             infowindow.open(map, marker);
                         });
                     })(
-                        parseFloat('{{ sector.latitud|escapejs }}'),
-                        parseFloat('{{ sector.longitud|escapejs }}'),
+                        parseFloat('{{ sector.latitud|default:0 }}'),
+                        parseFloat('{{ sector.longitud|default:0 }}'),
                         '{{ sector.nombre|escapejs }}'
                     );
                     {% endfor %}
                 }
-    
+        
                 // Intentar obtener la ubicación del usuario
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(handleLocationSuccess, handleLocationError);
@@ -265,10 +306,11 @@
                     handleLocationError();
                 }
             }
-    
+        
             // Inicializar el mapa cuando la página esté completamente cargada
             window.onload = initMap;
         </script>
+        
         
           <ul>
             <li class="nivel sector">SECTOR:</li>

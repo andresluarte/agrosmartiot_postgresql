@@ -40,22 +40,18 @@ class Sector(models.Model):
         super(Sector, self).save(*args, **kwargs)
 
     def extract_lat_lng_from_link(self, link):
-        # Ejemplo: https://www.google.com/maps?q=loc:40.748817,-73.985428&hl=es
-        import re
-        match = re.search(r'@(-?\d+\.\d+),(-?\d+\.\d+)', link)
+        match = re.search(r'https?://(?:maps\.app\.goo\.gl|www\.google\.com\/maps)/q=(.+?)\?.*$', link)
         if match:
-            lat = float(match.group(1))
-            lng = float(match.group(2))
-            return lat, lng
-        match_alt = re.search(r'loc:(-?\d+\.\d+),(-?\d+\.\d+)', link)
-        if match_alt:
-            lat = float(match_alt.group(1))
-            lng = float(match_alt.group(2))
-            return lat, lng
+            location = match.group(1)
+            coords = location.split(',')
+            if len(coords) == 2:
+                try:
+                    lat = float(coords[0])
+                    lng = float(coords[1])
+                    return lat, lng
+                except ValueError:
+                    pass
         return None, None
-
-    def __str__(self):
-        return self.nombre
 
 class Huerto(MPTTModel):
     nombre = models.CharField(max_length=50)
