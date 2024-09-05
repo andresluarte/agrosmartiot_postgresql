@@ -35,22 +35,24 @@ class Sector(models.Model):
     def save(self, *args, **kwargs):
         if self.google_maps_link and (not self.latitud or not self.longitud):
             lat, lng = self.extract_lat_lng_from_link(self.google_maps_link)
-            if lat and lng:
-                self.latitud = lat
-                self.longitud = lng
+            self.latitud = lat
+            self.longitud = lng
         super(Sector, self).save(*args, **kwargs)
 
-        
-
-    def resolve_google_maps_link(self, short_link):
-        """
-        Resolver enlaces cortos de Google Maps y obtener la URL completa.
-        """
-        try:
-            response = requests.get(short_link, allow_redirects=True)
-            return response.url
-        except requests.RequestException:
-            return None
+    def extract_lat_lng_from_link(self, link):
+        # Ejemplo: https://www.google.com/maps?q=loc:40.748817,-73.985428&hl=es
+        import re
+        match = re.search(r'@(-?\d+\.\d+),(-?\d+\.\d+)', link)
+        if match:
+            lat = float(match.group(1))
+            lng = float(match.group(2))
+            return lat, lng
+        match_alt = re.search(r'loc:(-?\d+\.\d+),(-?\d+\.\d+)', link)
+        if match_alt:
+            lat = float(match_alt.group(1))
+            lng = float(match_alt.group(2))
+            return lat, lng
+        return None, None
 
     def __str__(self):
         return self.nombre

@@ -177,43 +177,38 @@
                     var userLat = position.coords.latitude;
                     var userLng = position.coords.longitude;
                     var userLocation = { lat: userLat, lng: userLng };
-        
+    
                     // Crear un mapa centrado en la ubicación del usuario
                     var map = new google.maps.Map(document.getElementById('map'), {
                         zoom: 12,
                         center: userLocation
                     });
-        
+    
                     // Array para almacenar las ventanas de información
                     var infoWindowArray = [];
-        
-                    // Añadir marcadores para cada sector
+    
                     {% for sector in sectores %}
                     (function(lat, lng, nombre) {
-                        if (!isNaN(lat) && !isNaN(lng)) { // Verifica si lat y lng son números válidos
-                            var marker = new google.maps.Marker({
-                                position: { lat: lat, lng: lng },
-                                map: map,
-                                title: nombre
+                        var marker = new google.maps.Marker({
+                            position: { lat: lat, lng: lng },
+                            map: map,
+                            title: nombre
+                        });
+    
+                        var infowindow = new google.maps.InfoWindow({
+                            content: '<div><strong>' + nombre + '</strong></div>'
+                        });
+    
+                        // Añadir el marcador al array de ventanas de información
+                        infoWindowArray.push(infowindow);
+    
+                        // Añadir un listener para mostrar la ventana de información al hacer clic en el marcador
+                        marker.addListener('click', function() {
+                            infoWindowArray.forEach(function(iw) {
+                                iw.close();
                             });
-        
-                            var infowindow = new google.maps.InfoWindow({
-                                content: '<div><strong>' + nombre + '</strong></div>'
-                            });
-        
-                            // Añadir el marcador al array de ventanas de información
-                            infoWindowArray.push(infowindow);
-        
-                            // Añadir un listener para mostrar la ventana de información al hacer clic en el marcador
-                            marker.addListener('click', function() {
-                                infoWindowArray.forEach(function(iw) {
-                                    iw.close();
-                                });
-                                infowindow.open(map, marker);
-                            });
-                        } else {
-                            console.error("Coordenadas inválidas para el sector: " + nombre);
-                        }
+                            infowindow.open(map, marker);
+                        });
                     })(
                         parseFloat('{{ sector.latitud|escapejs }}'),
                         parseFloat('{{ sector.longitud|escapejs }}'),
@@ -221,7 +216,7 @@
                     );
                     {% endfor %}
                 }
-        
+    
                 // Función para manejar los errores de geolocalización
                 function handleLocationError() {
                     alert("No se pudo obtener la ubicación. Mostrando el mapa centrado en Santiago, Chile.");
@@ -229,37 +224,32 @@
                         zoom: 12,
                         center: { lat: -33.4489, lng: -70.6693 } // Coordenadas de Santiago, Chile
                     });
-        
                     // Array para almacenar las ventanas de información
                     var infoWindowArray = [];
-        
+    
                     // Agregar los marcadores de todos modos
                     {% for sector in sectores %}
                     (function(lat, lng, nombre) {
-                        if (!isNaN(lat) && !isNaN(lng)) { // Verifica si lat y lng son números válidos
-                            var marker = new google.maps.Marker({
-                                position: { lat: lat, lng: lng },
-                                map: map,
-                                title: nombre
+                        var marker = new google.maps.Marker({
+                            position: { lat: lat, lng: lng },
+                            map: map,
+                            title: nombre
+                        });
+    
+                        var infowindow = new google.maps.InfoWindow({
+                            content: '<div><strong>' + nombre + '</strong></div>'
+                        });
+    
+                        // Añadir el marcador al array de ventanas de información
+                        infoWindowArray.push(infowindow);
+    
+                        // Añadir un listener para mostrar la ventana de información al hacer clic en el marcador
+                        marker.addListener('click', function() {
+                            infoWindowArray.forEach(function(iw) {
+                                iw.close();
                             });
-        
-                            var infowindow = new google.maps.InfoWindow({
-                                content: '<div><strong>' + nombre + '</strong></div>'
-                            });
-        
-                            // Añadir el marcador al array de ventanas de información
-                            infoWindowArray.push(infowindow);
-        
-                            // Añadir un listener para mostrar la ventana de información al hacer clic en el marcador
-                            marker.addListener('click', function() {
-                                infoWindowArray.forEach(function(iw) {
-                                    iw.close();
-                                });
-                                infowindow.open(map, marker);
-                            });
-                        } else {
-                            console.error("Coordenadas inválidas para el sector: " + nombre);
-                        }
+                            infowindow.open(map, marker);
+                        });
                     })(
                         parseFloat('{{ sector.latitud|escapejs }}'),
                         parseFloat('{{ sector.longitud|escapejs }}'),
@@ -267,7 +257,7 @@
                     );
                     {% endfor %}
                 }
-        
+    
                 // Intentar obtener la ubicación del usuario
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(handleLocationSuccess, handleLocationError);
@@ -275,7 +265,7 @@
                     handleLocationError();
                 }
             }
-        
+    
             // Inicializar el mapa cuando la página esté completamente cargada
             window.onload = initMap;
         </script>

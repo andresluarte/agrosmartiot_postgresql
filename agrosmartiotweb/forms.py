@@ -244,60 +244,6 @@ class SectorForm(forms.ModelForm):
         if not link and (not lat or not lng):
             raise forms.ValidationError("Debes proporcionar coordenadas o un enlace de Google Maps.")
 
-        # Si se proporciona un enlace, intenta extraer las coordenadas
-        if link and (not lat or not lng):
-            resolved_link = self.resolve_google_maps_link(link)
-            if resolved_link:
-                lat, lng = self.extract_lat_lng_from_link(resolved_link)
-                if lat and lng:
-                    cleaned_data['latitud'] = lat
-                    cleaned_data['longitud'] = lng
-                else:
-                    raise forms.ValidationError("El enlace de Google Maps no contiene coordenadas válidas.")
-            else:
-                raise forms.ValidationError("No se pudo resolver el enlace de Google Maps.")
-
-        return cleaned_data
-
-    def resolve_google_maps_link(self, short_link):
-        """
-        Resolver enlaces cortos de Google Maps y obtener la URL completa.
-        """
-        try:
-            response = requests.head(short_link, allow_redirects=True)
-            return response.url
-        except requests.RequestException:
-            return None
-
-    def extract_lat_lng_from_link(self, link):
-        """
-        Extraer coordenadas del enlace completo de Google Maps.
-        """
-        # Intentar con el formato común de Google Maps
-        match = re.search(r'@(-?\d+\.\d+),(-?\d+\.\d+)', link)
-        if match:
-            lat = float(match.group(1))
-            lng = float(match.group(2))
-            return lat, lng
-
-        # Intentar con el formato alternativo "loc"
-        match_alt = re.search(r'loc:(-?\d+\.\d+),(-?\d+\.\d+)', link)
-        if match_alt:
-            lat = float(match_alt.group(1))
-            lng = float(match_alt.group(2))
-            return lat, lng
-
-        # Intentar con el formato común de búsqueda en Google Maps
-        match_search = re.search(r'(-?\d+\.\d+),(-?\d+\.\d+)', link)
-        if match_search:
-            lat = float(match_search.group(1))
-            lng = float(match_search.group(2))
-            return lat, lng
-
-        return None, None
-
-
-
 class HuertoForm(forms.ModelForm):
     class Meta:
         model = Huerto
