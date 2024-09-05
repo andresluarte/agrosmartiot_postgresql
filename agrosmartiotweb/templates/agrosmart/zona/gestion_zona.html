@@ -85,6 +85,7 @@
     <div class="card-body">
       
       <h3> Visualización de Sectores, Huertos y Lotes </h3>
+      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDT0QJ4JVXUrTA8mRZN_YXjy2CZDsa_vmw"></script>
       <hr>
       <td>
         <head>
@@ -160,9 +161,115 @@
                     color: #33FF63;
                 }
             </style>
+            <style>
+              #map {
+                  height: 500px;
+                  width: 100%;
+              }
+          </style>
         </head>
         <body>
-            
+          <div id="map"></div>
+          <script>
+            function initMap() {
+                // Función para manejar el éxito en la obtención de la ubicación
+                function handleLocationSuccess(position) {
+                    var userLat = position.coords.latitude;
+                    var userLng = position.coords.longitude;
+                    var userLocation = { lat: userLat, lng: userLng };
+    
+                    // Crear un mapa centrado en la ubicación del usuario
+                    var map = new google.maps.Map(document.getElementById('map'), {
+                        zoom: 12,
+                        center: userLocation
+                    });
+    
+                    // Array para almacenar las ventanas de información
+                    var infoWindowArray = [];
+    
+                    {% for sector in sectores %}
+                    (function(lat, lng, nombre) {
+                        var marker = new google.maps.Marker({
+                            position: { lat: lat, lng: lng },
+                            map: map,
+                            title: nombre
+                        });
+    
+                        var infowindow = new google.maps.InfoWindow({
+                            content: '<div><strong>' + nombre + '</strong></div>'
+                        });
+    
+                        // Añadir el marcador al array de ventanas de información
+                        infoWindowArray.push(infowindow);
+    
+                        // Añadir un listener para mostrar la ventana de información al hacer clic en el marcador
+                        marker.addListener('click', function() {
+                            infoWindowArray.forEach(function(iw) {
+                                iw.close();
+                            });
+                            infowindow.open(map, marker);
+                        });
+                    })(
+                        parseFloat('{{ sector.latitud|escapejs }}'),
+                        parseFloat('{{ sector.longitud|escapejs }}'),
+                        '{{ sector.nombre|escapejs }}'
+                    );
+                    {% endfor %}
+                }
+    
+                // Función para manejar los errores de geolocalización
+                function handleLocationError() {
+                    alert("No se pudo obtener la ubicación. Mostrando el mapa centrado en Santiago, Chile.");
+                    var map = new google.maps.Map(document.getElementById('map'), {
+                        zoom: 12,
+                        center: { lat: -33.4489, lng: -70.6693 } // Coordenadas de Santiago, Chile
+                    });
+                    // Array para almacenar las ventanas de información
+                    var infoWindowArray = [];
+    
+                    // Agregar los marcadores de todos modos
+                    {% for sector in sectores %}
+                    (function(lat, lng, nombre) {
+                        var marker = new google.maps.Marker({
+                            position: { lat: lat, lng: lng },
+                            map: map,
+                            title: nombre
+                        });
+    
+                        var infowindow = new google.maps.InfoWindow({
+                            content: '<div><strong>' + nombre + '</strong></div>'
+                        });
+    
+                        // Añadir el marcador al array de ventanas de información
+                        infoWindowArray.push(infowindow);
+    
+                        // Añadir un listener para mostrar la ventana de información al hacer clic en el marcador
+                        marker.addListener('click', function() {
+                            infoWindowArray.forEach(function(iw) {
+                                iw.close();
+                            });
+                            infowindow.open(map, marker);
+                        });
+                    })(
+                        parseFloat('{{ sector.latitud|escapejs }}'),
+                        parseFloat('{{ sector.longitud|escapejs }}'),
+                        '{{ sector.nombre|escapejs }}'
+                    );
+                    {% endfor %}
+                }
+    
+                // Intentar obtener la ubicación del usuario
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(handleLocationSuccess, handleLocationError);
+                } else {
+                    handleLocationError();
+                }
+            }
+    
+            // Inicializar el mapa cuando la página esté completamente cargada
+            window.onload = initMap;
+        </script>
+        
           <ul>
             <li class="nivel sector">SECTOR:</li>
             {% for sector in sectores %}
@@ -187,6 +294,8 @@
                       </a>
                       
                   </li>
+                  
+                  
                   <ul>
                       <li class="nivel huerto ">HUERTO:</li>
                       {% for huerto in sector.huerto_set.all %}
@@ -230,6 +339,8 @@
                 </div>
             {% endfor %}
         </ul>
+        
+      
             
         </body>
         

@@ -17,10 +17,10 @@ class ProcesoSerializer(serializers.ModelSerializer):
         )
 
 
-from .models import TemperatureHumidity
+from .models import TemperatureHumidityLocation
 
-class TemperatureHumiditySerializer(serializers.ModelSerializer):
+class TemperatureHumidityLocationSerializer(serializers.ModelSerializer):
     class Meta:
-        model = TemperatureHumidity
-        fields = ('temperature', 'humidity')
+        model = TemperatureHumidityLocation
+        fields = ('temperature', 'humidity', 'latitude', 'longitude')
 

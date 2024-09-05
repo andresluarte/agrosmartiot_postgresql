@@ -20,42 +20,64 @@ def validate_rut(value):
     if not re.match(rut_pattern, value):
         raise ValidationError('El formato del RUT no es válido')
 
+
+from django.db import models
+
+import requests
+
+
 class Sector(models.Model):
     nombre = models.CharField(max_length=50)
-    
+    latitud = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    longitud = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    google_maps_link = models.URLField(max_length=200, null=True, blank=True)
 
+    def save(self, *args, **kwargs):
+        if self.google_maps_link and (not self.latitud or not self.longitud):
+            lat, lng = self.extract_lat_lng_from_link(self.google_maps_link)
+            self.latitud = lat
+            self.longitud = lng
+        super(Sector, self).save(*args, **kwargs)
+
+    def extract_lat_lng_from_link(self, link):
+        # Ejemplo: https://www.google.com/maps?q=loc:40.748817,-73.985428&hl=es
+        import re
+        match = re.search(r'@(-?\d+\.\d+),(-?\d+\.\d+)', link)
+        if match:
+            lat = float(match.group(1))
+            lng = float(match.group(2))
+            return lat, lng
+        match_alt = re.search(r'loc:(-?\d+\.\d+),(-?\d+\.\d+)', link)
+        if match_alt:
+            lat = float(match_alt.group(1))
+            lng = float(match_alt.group(2))
+            return lat, lng
+        return None, None
     def __str__(self):
         return self.nombre
-      
+
 class Huerto(MPTTModel):
     nombre = models.CharField(max_length=50)
     sector = models.ForeignKey(Sector, on_delete=models.CASCADE)
     parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='lotes')
+    
 
     class MPTTMeta:
         order_insertion_by = ['nombre']
 
     def __str__(self):
         return self.nombre
-    
+
 class Lote(models.Model):
     nombre = models.CharField(max_length=50)
     huerto = models.ForeignKey(Huerto, on_delete=models.CASCADE)
     
-   
 
     def __str__(self):
         return self.nombre
 
 
-class SensorData(models.Model):
-    temperature = models.FloatField()
-    latitude = models.FloatField()
-    longitude = models.FloatField()
-    timestamp = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return self.temperature
 
 
 
@@ -243,10 +265,25 @@ class Jornada(models.Model):
             finanzas_por_mes.save()
 
  
-class TemperatureHumidity(models.Model):
+
+
+class TemperatureHumidityLocation(models.Model):
     temperature = models.FloatField()
     humidity = models.FloatField()
+    latitude = models.FloatField()
+    longitude = models.FloatField()
     timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Temperature: {self.temperature}, Humidity: {self.humidity}, Latitude: {self.latitude}, Longitude: {self.longitude}"
+
+class HumiditySoil(models.Model):
+    humiditysoil = models.FloatField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Humidity: {self.humiditysoil}, Timestamp: {self.timestamp}"
+
 # temperatura_app/models.py
 #treeforeingkey
 #MODELO USUARIO

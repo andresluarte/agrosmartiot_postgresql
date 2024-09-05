@@ -219,10 +219,33 @@ class JornadaModificarForm(forms.ModelForm):
 from django import forms
 from .models import Sector, Huerto, Lote
 
+from django import forms
+from .models import Sector
+import requests
+import re
+
 class SectorForm(forms.ModelForm):
+    google_maps_link = forms.URLField(
+        max_length=200, 
+        required=False,
+        label="Enlace de Google Maps (opcional)"
+    )
+
     class Meta:
         model = Sector
-        fields = ['nombre']
+        fields = ['nombre', 'latitud', 'longitud', 'google_maps_link']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        lat = cleaned_data.get("latitud")
+        lng = cleaned_data.get("longitud")
+        link = cleaned_data.get("google_maps_link")
+
+        if not link and (not lat or not lng):
+            raise forms.ValidationError("Debes proporcionar coordenadas o un enlace de Google Maps.")
+
+
+
 
 class HuertoForm(forms.ModelForm):
     class Meta:
@@ -237,8 +260,8 @@ class LoteForm(forms.ModelForm):
 class SectorModificarForm(forms.ModelForm):
     
     class Meta:
-        model = Trabajador
-        fields =  ["nombre"]
+        model = Sector
+        fields = ['nombre','latitud','longitud']
 class HuertoModificarForm(forms.ModelForm):
     class Meta:
         model = Huerto

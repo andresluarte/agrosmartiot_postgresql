@@ -73,7 +73,7 @@ urlpatterns = [
 
 
     path('api/temperature-humidity/', views.  TemperatureHumidityAPIView.as_view(), name='temperature-humidity'),
-    path('tiemporeal/', views.temperature_humidity_list, name='tiemporeal'),
+    path('tiemporeal/', views.combined_data_view, name='tiemporeal'),
 
 
 
@@ -88,11 +88,15 @@ urlpatterns = [
 
 
     path('gestion_finanzas/', views.FinanzasList, name='gestion_finanzas'),
+    # path('gestion_finanzas/', views.FinanzasList2, name='gestion_finanzas'),
    
     path('agregar_gasto_financiero/', views.agregar_gasto_financiero, name='agregar_gasto_financiero'),
 
- 
+    path('receive-data-soil/', views.receive_data_soil, name='receive_data_soil'),
+    path('tiemporealsoil/', views.combined_data_view_soil, name='tiemporealsoil'),
 
+
+  
 
 
 ]
